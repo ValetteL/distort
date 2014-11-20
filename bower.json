@@ -2,14 +2,15 @@
   "name": "distort",
   "main": "distort.js",
   "version": "1.0.0-alpha",
-  "homepage": "https://github.com/isuttell/distort",
+  "homepage": "http://isuttell.github.io/distort/",
   "authors": [
     "Isaac Suttell <isaac@e-mc2.com>"
   ],
   "description": "CSS Matrix3D Distorts",
   "keywords": [
     "CSS3",
-    "matrix3d"
+    "matrix3d",
+    "animation"
   ],
   "license": "MIT",
   "ignore": [

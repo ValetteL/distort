@@ -2,7 +2,7 @@
   "name": "distort",
   "version": "1.0.0-alpha",
   "description": "CSS Matrix3D Distorts",
-  "homepage": "https://github.com/isuttell/distort",
+  "homepage": "http://isuttell.github.io/distort/",
   "repository": {
     "type": "git",
     "url": "https://github.com/isuttell/distort.git"
