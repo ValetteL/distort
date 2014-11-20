@@ -17,6 +17,8 @@ module.exports = function(grunt) {
    * relative path. These modules should export a function
    * that, when run, should either load/configure or register
    * a Grunt task.
+   *
+   * @param   {String}   dir   Directory to load
    */
   function loadTasks(dir) {
     /**
@@ -48,20 +50,12 @@ module.exports = function(grunt) {
      */
     var jsFile = /.*\.js/;
 
-    /**
-     * Cycle through each item in the directory
-     */
+    // Cycle through each item in the directory
     list.forEach(function(module) {
-
-      /**
-       * Check to see if with have a match and if we split it apartment
-       */
+      //Check to see if with have a match and if we split it apartment
       module = module.match(jsFile);
       if (module) {
-        /**
-         * If we find a match try to load and save it. Otherwise log an error but
-         * don't crash the application.
-         */
+        // If we find a match try to load and save it. Otherwise log an error
         try {
           modules[module[0]] = require(dir + '/' + module[0]);
         } catch (err) {
@@ -86,8 +80,8 @@ module.exports = function(grunt) {
   }
 
   // Load task functions
-  var taskConfigurations = loadTasks('./tasks/config'),
-    registerDefinitions = loadTasks('./tasks/register');
+  var taskConfigurations = loadTasks('./tasks/config');
+  var registerDefinitions = loadTasks('./tasks/register');
 
   // Run task functions to configure Grunt.
   invokeConfigFn(taskConfigurations);
