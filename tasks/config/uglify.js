@@ -3,6 +3,8 @@
  *
  * ---------------------------------------------------------------
  *
+ * Minifies distory.js and then creates a fancy banner on the top
+ *
  * For usage docs see:
  *      https://github.com/gruntjs/grunt-contrib-uglify
  */

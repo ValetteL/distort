@@ -21,7 +21,7 @@ module.exports = function(grunt) {
 
     distort: {
       files: ['distort.js', 'tests/specs/**/*.js'],
-      tasks: ['karma:watch:run', 'jshint', 'jscs']
+      tasks: ['karma:watch:run', 'jshint', 'jscs', 'jsvalidate']
     }
 
   });
