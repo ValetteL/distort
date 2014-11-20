@@ -195,7 +195,7 @@
           p = i;
         }
       }
-      if (p != j) {
+      if (p !== j) {
         for (k = 0; k < 8; k++) {
           tmp = aM[p][k];
           aM[p][k] = aM[j][k];
