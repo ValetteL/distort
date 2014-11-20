@@ -1,81 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
-        Remove this if you use the .htaccess -->
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-        <title>Drag Points</title>
-        <link rel="stylesheet" href="css/reset.css" type="text/css"/>
-        <link rel="stylesheet" href="css/drag_points.css" type="text/css"/>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-        <script src="js/PerspectiveTransform.min.js"></script>
-    </head>
-    <body>
-        <div id="info-container">
-            Drag the fucking points to transform the image.
-        </div>
-        <div id="container">
-            <div class="img"></div>
-            <div class="pt tl"></div>
-            <div class="pt tr"></div>
-            <div class="pt bl"></div>
-            <div class="pt br"></div>
-        </div>
-        <script>
-            var container = $("#container");
-            var img = $(".img");
-            var pts = $(".pt");
-            var IMG_WIDTH = 512;
-            var IMG_HEIGHT = 512;
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Distort by isuttell</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Distort</h1>
+        <p>A Javascript Class to do the CSS 3D transformation by 4 destination points</p>
+
+        <p class="view"><a href="https://github.com/isuttell/distort">View the Project on GitHub <small>isuttell/distort</small></a></p>
 
 
-            var transform = new PerspectiveTransform(img[0], IMG_WIDTH, IMG_HEIGHT, true);
-            var tl = pts.filter(".tl").css({
-                left : transform.topLeft.x,
-                top : transform.topLeft.y
-            });
-            var tr = pts.filter(".tr").css({
-                left : transform.topRight.x,
-                top : transform.topRight.y
-            });
-            var bl = pts.filter(".bl").css({
-                left : transform.bottomLeft.x,
-                top : transform.bottomLeft.y
-            });
-            var br = pts.filter(".br").css({
-                left : transform.bottomRight.x,
-                top : transform.bottomRight.y
-            });
-            var target;
-            var targetPoint;
+        <ul>
+          <li><a href="https://github.com/isuttell/distort/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/isuttell/distort/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/isuttell/distort">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="distort" class="anchor" href="#distort" aria-hidden="true"><span class="octicon octicon-link"></span></a>Distort</h1>
 
-            function onMouseMove(e) {
-                targetPoint.x = e.pageX - container.offset().left - 20;
-                targetPoint.y = e.pageY - container.offset().top - 20;
-                target.css({
-                    left : targetPoint.x,
-                    top : targetPoint.y
-                });
+<p>Library to generate complex matrixes to be used with CSS3. You can individually
+set/adjust/animate each of the four points of an element;</p>
 
-                // check the polygon error, if it's 0, which mean there is no error
-                if(transform.checkError()==0){
-                    transform.update();
-                    img.show();
-                }else{
-                    img.hide();
-                }
-            }
+<h2>
+<a id="basic-usage" class="anchor" href="#basic-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Basic Usage</h2>
 
-            pts.mousedown(function(e) {
-                target = $(this);
-                targetPoint = target.hasClass("tl") ? transform.topLeft : target.hasClass("tr") ? transform.topRight : target.hasClass("bl") ? transform.bottomLeft : transform.bottomRight;
-                onMouseMove.apply(this, Array.prototype.slice.call(arguments));
-                $(window).mousemove(onMouseMove);
-                $(window).mouseup(function() {
-                    $(window).unbind('mousemove', onMouseMove);
-                })
-            });
-        </script>
-    </body>
+<pre><code>    var distort = new Distort({
+        width: 100,
+        height: 100
+    });
+
+    // Relative
+    distort.topRight.x += 100;
+    distort.topRight.y += 100;
+
+    // Absolute
+    distort.bottomRight.x = 50;
+    distort.bottomRight.y = 50;
+
+    $('#image').css({
+        'transform' : distort.toString()
+    });
+</code></pre>
+
+<h2>
+<a id="credit" class="anchor" href="#credit" aria-hidden="true"><span class="octicon octicon-link"></span></a>Credit</h2>
+
+<p>Forked from <a href="https://github.com/edankwan/PerspectiveTransform.js">edankwan/PerspectiveTransform.js</a></p>
+
+<p>The original PerspectiveTransform.js is created by  Israel Pastrana
+<a href="http://www.is-real.net/experiments/css3/wonder-webkit/js/real/display/PerspectiveTransform.js">http://www.is-real.net/experiments/css3/wonder-webkit/js/real/display/PerspectiveTransform.js</a></p>
+
+<p>Matrix Libraries from a Java port of JAMA: A Java Matrix Package, <a href="http://math.nist.gov/javanumerics/jama/">http://math.nist.gov/javanumerics/jama/</a>
+Developed by Dr Peter Coxhead: <a href="http://www.cs.bham.ac.uk/%7Epxc/">http://www.cs.bham.ac.uk/~pxc/</a>
+Available here: <a href="http://www.cs.bham.ac.uk/%7Epxc/js/">http://www.cs.bham.ac.uk/~pxc/js/</a></p>
+
+<p>I simply removed some irrelevant variables and functions and merge everything into a smaller function. I also added some error checking functions and bug fixing things.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/isuttell">isuttell</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
 </html>
