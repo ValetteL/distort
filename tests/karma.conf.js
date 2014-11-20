@@ -1,51 +1,52 @@
-module.exports = function(config)
-{
-    'use strict';
+module.exports = function(config) {
+  'use strict';
 
-    config.set(
-    {
+  config.set({
 
-        basePath: '../',
+    basePath: '../',
 
-        files: [
-            'tests/vendor/**/*.js',
-            'distort.js',
-            'tests/specs/**/*.js',
-        ],
+    files: [
+      'tests/vendor/**/*.js',
+      'distort.js',
+      'tests/specs/**/*.js',
+    ],
 
-        autoWatch: false,
+    autoWatch: false,
 
-        frameworks: ['jasmine'],
+    frameworks: ['jasmine'],
 
-        browsers: ['PhantomJS'],
+    browsers: ['PhantomJS'],
 
-        plugins: [
-            'karma-chrome-launcher',
-            'karma-firefox-launcher',
-            'karma-safari-launcher',
-            'karma-phantomjs-launcher',
-            'karma-jasmine',
-            'karma-coverage',
-            'karma-story-reporter',
-            'karma-html-reporter'
-        ],
+    plugins: [
+      'karma-chrome-launcher',
+      'karma-firefox-launcher',
+      'karma-safari-launcher',
+      'karma-phantomjs-launcher',
+      'karma-jasmine',
+      'karma-coverage',
+      'karma-story-reporter',
+      'karma-html-reporter'
+    ],
 
-        coverageReporter:
-        {
-            dir: 'tests/coverage/',
-            reporters: [
-                { type: 'html', subdir: 'html' },
-                { type: 'lcovonly', subdir: 'lcov' },
-                { type: 'text-summary' }
-            ]
-        },
+    coverageReporter: {
+      dir: 'tests/coverage/',
+      reporters: [{
+        type: 'html',
+        subdir: 'html'
+      }, {
+        type: 'lcovonly',
+        subdir: 'lcov'
+      }, {
+        type: 'text-summary'
+      }]
+    },
 
-        htmlReporter: {
-            outputDir: 'tests/results/',
-            templatePath: __dirname + '/reportTemplate.html'
-        },
+    htmlReporter: {
+      outputDir: 'tests/results/',
+      templatePath: __dirname + '/reportTemplate.html'
+    },
 
-        reporters: ['story', 'html', 'coverage']
+    reporters: ['story', 'html', 'coverage']
 
-    });
+  });
 };
