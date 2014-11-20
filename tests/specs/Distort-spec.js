@@ -6,7 +6,15 @@ describe('Distort', function() {
     expect(typeof Distort).toBe('function');
   });
 
-  it('should have a toString method which returns a matrix', function(){
+  it('should have `update` and `toString` methods that are the same', function() {
+    var distort = new Distort({
+      width: 100,
+      height: 100
+    });
+    expect(distort.toString).toBe(distort.update);
+  });
+
+  it('should have a `toString` method which returns a matrix', function() {
     var distort = new Distort({
       width: 100,
       height: 100
@@ -15,7 +23,7 @@ describe('Distort', function() {
     expect(distort.toString()).toBe(RESET_MATRIX);
   });
 
-  it('should have a style property which contains a matrix', function() {
+  it('should have a `style` property which contains a matrix', function() {
     var distort = new Distort({
       width: 100,
       height: 100
@@ -25,7 +33,7 @@ describe('Distort', function() {
   });
 
 
-  it('should have an isValid property which checks if the matrix is valid', function() {
+  it('should have an `isValid` property which checks if the matrix is valid', function() {
     var distort = new Distort({
       width: 100,
       height: 100
@@ -105,8 +113,7 @@ describe('Distort', function() {
     expect(distort1.equals(distort2)).toBe(false);
   });
 
-
-  describe('distorts', function() {
+  describe('Distorts', function() {
     it('should move the topLeft corner 10 pixels up and over', function() {
       var distort = new Distort({
         width: 100,
@@ -229,13 +236,15 @@ describe('Distort', function() {
     });
   });
 
-  it('should apply addition transforms for firefox', function() {
-    var distort = new Distort({
-      width: 100,
-      height: 100
+  describe('DPR Fix', function() {
+    it('should apply addition transforms for firefox', function() {
+      var distort = new Distort({
+        width: 100,
+        height: 100
+      });
+      distort.dprFix = true;
+      distort.dpr = 3;
+      expect(distort.toString()).toEqual('matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1) scale(3, 3) perspective(1000px) translateZ(-2000px)');
     });
-    distort.dprFix = true;
-    distort.dpr = 3;
-    expect(distort.toString()).toEqual('matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1) scale(3, 3) perspective(1000px) translateZ(-2000px)');
   });
 });
