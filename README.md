@@ -1,7 +1,12 @@
-# Distort
+# Distort.js
 
 Library to generate complex matrixes to be used with CSS3. You can individually
 set/adjust/animate each of the four points of an element;
+
+[![Build Status](http://img.shields.io/travis/isuttell/distort.svg?style=flat)](https://travis-ci.org/isuttell/distort)
+[![Coverage Status](https://img.shields.io/coveralls/isuttell/distort.svg?style=flat)](https://coveralls.io/r/isuttell/distort)
+[![Codacy Badge](https://www.codacy.com/project/badge/acc9c0ea49c7433fb86216e3aaebce5c)](https://www.codacy.com/public/isuttell/distort)
+[![Release](http://img.shields.io/github/release/isuttell/distort.svg?style=flat)](https://github.com/isuttell/distort/tarball/master)
 
 ## Basic Usage
 ````
