@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <title>Distort</title>
+        <style>
+        #container {
+
+        }
+
+        #image {
+            width: 400px;
+            height: 400px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -200px;
+            margin-top: -200px;
+        }
+
+        </style>
+    </head>
+    <body>
+        <div id="container">
+            <div id="image">
+                <img src="http://lorempixel.com/400/400/sports/">
+            </div>
+        </div>
+        <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="../distort.js"></script>
+        <script>
+            $(function(){
+                var $image = $('#image');
+                var distort = new Distort({
+                    $el: $image
+                });
+
+                distort.topRight.x += 100;
+                distort.topRight.y += 100;
+
+                distort.bottomRight.x -= 50;
+                distort.bottomRight.y -= 50;
+
+                $image.css({
+                    'transform' : distort.toString()
+                });
+            });
+        </script>
+    </body>
+</html>

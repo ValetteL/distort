@@ -1,0 +1,26 @@
+{
+  "name": "distort",
+  "main": "distort.js",
+  "version": "1.0.0-alpha",
+  "homepage": "https://github.com/isuttell/distort",
+  "authors": [
+    "Isaac Suttell <isaac@e-mc2.com>"
+  ],
+  "description": "CSS Matrix3D Distorts",
+  "keywords": [
+    "CSS3",
+    "matrix3d"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "node_modules",
+    "tests",
+    ".gitignore",
+    ".jshintrc",
+    ".jscsrc",
+    ".travis.yml",
+    ".coveralls.yml",
+    "Gruntfile.js",
+    "package.json"
+  ]
+}
