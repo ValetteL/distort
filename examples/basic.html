@@ -3,12 +3,19 @@
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-        <title>Distort</title>
+        <title>Distort.js</title>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
         <style>
-        #container {
-
+        body {
+            background-color: #111;
+            font-family: 'Open Sans', sans-serif;
+            color: #ccc;
+            margin: 0;
+            padding: 0;
         }
-
+        h1, p {
+            padding: 0 20px;
+        }
         #image {
             width: 400px;
             height: 400px;
@@ -17,12 +24,18 @@
             top: 50%;
             margin-left: -200px;
             margin-top: -200px;
+            -webkit-transition: all 1s ease;
+            -moz-transition: all 1s ease;
+            transition: all 1s ease;
+            cursor: pointer;
         }
 
         </style>
     </head>
     <body>
         <div id="container">
+            <h1>Basic Example (CSS Transitions)</h1>
+            <p>Click the image to toggle between two matrixes</p>
             <div id="image">
                 <img src="http://lorempixel.com/400/400/sports/">
             </div>
@@ -32,18 +45,53 @@
         <script>
             $(function(){
                 var $image = $('#image');
-                var distort = new Distort({
+                var toggle = true;
+
+                var distort1 = new Distort({
                     $el: $image
                 });
 
-                distort.topRight.x += 100;
-                distort.topRight.y += 100;
+                distort1.topRight.x += 100;
+                distort1.topRight.y += 100;
 
-                distort.bottomRight.x -= 50;
-                distort.bottomRight.y -= 50;
+                distort1.bottomRight.x -= 50;
+                distort1.bottomRight.y -= 50;
+
+                // distort1.bottomLeft.x -= 10;
+                distort1.bottomLeft.y -= 50;
+
+
+                var distort2 = new Distort({
+                    $el: $image
+                });
+
+                distort2.bottomRight.x += 50;
+                distort2.bottomRight.y += 50;
+
+                distort2.bottomLeft.x -= 50;
+                distort2.bottomLeft.y += 50;
+
+                distort2.topRight.x -= 50;
+                distort2.topRight.y -= 50;
+
+                distort2.topLeft.x += 50;
+                distort2.topLeft.y -= 50;
 
                 $image.css({
-                    'transform' : distort.toString()
+                    'transform' : distort1.toString()
+                });
+
+                $image.click(function(){
+                    toggle = !toggle;
+                    if(toggle) {
+                        $image.css({
+                            'transform' : distort1.toString()
+                        });
+                    } else {
+                       $image.css({
+                            'transform' : distort2.toString()
+                        });
+                    }
                 });
             });
         </script>
