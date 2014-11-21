@@ -76,21 +76,30 @@ describe('Distort', function() {
   });
 
   it('should be able to clone itself', function(){
-    var distort = new Distort({
+    var original = new Distort({
       width: 100,
       height: 100
     });
-    distort.topLeft.x = 10;
+    original.topLeft.x = 10;
 
-    var cloned = distort.clone();
+    // Magic
+    var cloned = original.clone();
+
+    // Make sure it is equal
+    expect(cloned.equals(original)).toBe(true);
+
+    // Update clone
     cloned.topLeft.x = 100;
-
-    expect(distort.topLeft.x).toBe(10);
     expect(cloned.topLeft.x).toBe(100);
+    expect(cloned.equals(original)).toBe(false);
 
-    expect(cloned.width).toEqual(distort.width);
-    expect(cloned.height).toEqual(distort.height);
-    expect(cloned.offset).toEqual(distort.offset);
+    // Did we change the original?
+    expect(original.topLeft.x).toBe(10);
+
+    // Did we lose the original properties?
+    expect(cloned.width).toEqual(original.width);
+    expect(cloned.height).toEqual(original.height);
+    expect(cloned.offset).toEqual(original.offset);
   });
 
   it('should have four points with x, y coordinates', function() {

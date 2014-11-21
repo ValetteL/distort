@@ -43,15 +43,19 @@
 
     // If $el is a jQuery element pull the height/width directly from it
     if (options.$el && options.$el instanceof window.$) {
-      this.width = options.$el.width();
-      this.height = options.$el.height();
+      this.$el = options.$el;
+      this.width = this.$el.width();
+      this.height = this.$el.height();
     }
 
     // Setup Transform Origin
     options.offset = options.offset || {};
-    this.setOffset(options.offset || {});
+    this.setOffset(options.offset);
 
-    // Define Starting Points
+    // Set starting matrix
+    this.matrix = BASE_MATRIX;
+
+    // Define Default Starting Points
     this.topLeft = {
       x: 0,
       y: 0
@@ -77,13 +81,6 @@
   }
 
   /**
-   * Stores all the values of a matrix
-   *
-   * @type {Array}
-   */
-  Distort.prototype.matrix = BASE_MATRIX;
-
-  /**
    * Calculate the transform origin. Accepts px, % or defaults to cetner
    *
    * @param     {Object}    offset    {x: String, y: String}
@@ -91,8 +88,8 @@
    * @return    {Object}
    */
   Distort.prototype.setOffset = function(offset) {
-    offset.x = offset.x || '';
-    offset.y = offset.y || '';
+    offset.x = offset.x ? offset.x.toString() : '';
+    offset.y = offset.y ? offset.y.toString() : '';
 
     // Configure x offset
     if (offset.x.indexOf('%') > -1) {
@@ -122,63 +119,6 @@
     this.offset = offset;
 
     return offset;
-  };
-
-  /**
-   * By default a matrix is not valid until it has be calculated
-   *
-   * @type    {Boolean}
-   */
-  Distort.prototype.isValid = false;
-
-  /**
-   * Transform Origin
-   *
-   * @type    {Object}
-   */
-  Distort.prototype.offset = {
-    x: 0,
-    y: 0
-  };
-
-  /**
-   * Default values for top left corner
-   *
-   * @type    {Object}
-   */
-  Distort.prototype.topLeft = {
-    x: 0,
-    y: 0
-  };
-
-  /**
-   * Default values for top right corner
-   *
-   * @type    {Object}
-   */
-  Distort.prototype.topRight = {
-    x: 0,
-    y: 0
-  };
-
-  /**
-   * Default values for bottom left corner
-   *
-   * @type    {Object}
-   */
-  Distort.prototype.bottomLeft = {
-    x: 0,
-    y: 0
-  };
-
-  /**
-   * Default values for bottom right corner
-   *
-   * @type    {Object}
-   */
-  Distort.prototype.bottomRight = {
-    x: 0,
-    y: 0
   };
 
   /**
@@ -482,24 +422,44 @@
     return this.toString() === matrix.toString();
   };
 
+    /**
+   * Checks to see if a var is a function or object
+   *
+   * @param  {Mixed}  obj  var to check
+   *
+   * @return {Boolean}
+   */
+  var isObject = function(obj) {
+    var result = {}.toString.call(obj);
+    return result === '[object Object]';
+  };
+
   /**
-   * Create a new instance of this instance
+   * Basic Recursive Extend Function
+   *
+   * @param     {Object}    dest   object to fill
+   * @param     {Object}    src    object to copy
+   *
+   * @return    {Object}
+   */
+  function extend(dest, src) {
+    for (var i in src) {
+      if (isObject(src[i]) && i !== '$el') {
+        dest[i] = extend({}, src[i]);
+      } else {
+        dest[i] = src[i];
+      }
+    }
+    return dest;
+  }
+
+  /**
+   * Clones the current instance
    *
    * @return    {Distort}
    */
   Distort.prototype.clone = function() {
-    var clone = new Distort({
-      width: this.width,
-      height: this.height,
-      $el: this.$el
-    });
-
-    for (var i in this) {
-      if (this.hasOwnProperty[i]) {
-        clone[i] = this[i];
-      }
-    }
-    return clone;
+    return extend(new Distort(), this);
   };
 
   return Distort;
