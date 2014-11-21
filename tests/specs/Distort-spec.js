@@ -458,5 +458,15 @@ describe('Distort', function() {
       expect(distort.bottomLeft.y).toEqual(100);
       expect(distort.bottomRight.y).toEqual(110);
     });
+
+    it('should throw an error on the wrong direction', function() {
+      var distort = new Distort({
+        width: 100,
+        height: 100
+      });
+
+      expect(function(){ distort.forcePerspective('bad', 10); }).toThrow('Invalid Perspective Direction');
+
+    });
   });
 });

@@ -540,6 +540,8 @@
     } else if (direction === 'right') {
       this.topRight.y -= value;
       this.bottomRight.y += value;
+    } else {
+      throw new Error('Invalid Perspective Direction');
     }
   };
 
