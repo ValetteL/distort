@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Distort by isuttell</title>
+    <title>Distort.js v1.0.1-alpha by isuttell</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
@@ -15,7 +15,7 @@
   <body>
     <div class="wrapper">
       <header>
-        <h1>Distort.js <small>v1.0.0-alpha</small></h1>
+        <h1>Distort.js <small>v1.0.1-alpha</small></h1>
         <p>Library to generate complex matrixes to be used with CSS3. You can individually set/adjust/animate each of the four points of an element.</p>
 
         <p class="view"><a href="https://github.com/isuttell/distort">View the Project on GitHub <small>isuttell/distort</small></a></p>
@@ -32,21 +32,51 @@
 <a id="basic-usage" class="anchor" href="#basic-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Basic Usage</h2>
 
 <pre><code>    var distort = new Distort({
-        width: 100,
-        height: 100
+        width: 100, // Required
+        height: 100, // Required
+
+        // Or
+
+        $el: $('.element'), // Orspecify a jQuery element
+
+        // (Optional) Transform Origin - Defaults to center
+        offset: {
+            x: '50%' || '50px', // Accepts 'px' or '%'
+            y: '50%' || '50px',
+        }
     });
 
     // Relative
     distort.topRight.x += 100;
     distort.topRight.y += 100;
 
+    distort.topLeft.x -= 100;
+    distort.topLeft.y -= 100;
+
     // Absolute
     distort.bottomRight.x = 50;
     distort.bottomRight.y = 50;
 
-    $('#image').css({
-        'transform' : distort.toString()
-    });
+    distort.bottomLeft.x = 0;
+    distort.bottomLeft.y = 50;
+
+    // Cloning
+    var translateDistort = distort.clone();
+
+    // Relative Translate
+    translateDistort.translateX(10);
+    translateDistort.translateY(10);
+
+    // Relative Scale
+    var scaleDistort = distort.clone();
+    scaleDistort.scale(1.1);
+
+    // (Optional) Check if the matrix was successfully generated
+    if(distort.isValid) {
+        $('#image').css({
+            'transform' : distort.toString()
+        });
+    }
 </code></pre>
 
 <h2>
