@@ -6,7 +6,7 @@ set/adjust/animate each of the four points of an element;
 [![Build Status](http://img.shields.io/travis/isuttell/distort.svg?style=flat)](https://travis-ci.org/isuttell/distort)
 [![Coverage Status](https://img.shields.io/coveralls/isuttell/distort.svg?style=flat)](https://coveralls.io/r/isuttell/distort)
 [![Codacy Badge](https://www.codacy.com/project/badge/acc9c0ea49c7433fb86216e3aaebce5c)](https://www.codacy.com/public/isuttell/distort)
-[![Dev Dependencies](http://img.shields.io/david/dev/isuttell/distort.svg)?style=flat](https://david-dm.org/isuttell/distort#info=devDependencies)
+[![Dev Dependencies](http://img.shields.io/david/dev/isuttell/distort.svg?style=flat](https://david-dm.org/isuttell/distort#info=devDependencies)
 [![Release](http://img.shields.io/github/release/isuttell/distort.svg?style=flat)](https://github.com/isuttell/distort/tarball/master)
 
 ## Basic Usage
