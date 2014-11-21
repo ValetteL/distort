@@ -46,8 +46,9 @@ set/adjust/animate each of the four points of an element;
 
 ## Examples
 
-* [3x3 Grid Menu on Codepen.io](http://codepen.io/isuttell/full/Wbbwyd/)
-* [Using with GSAP TimelineMax on Codepen.io](http://codepen.io/isuttell/full/yyyjmX/)
+* [3x3 Grid Menu](http://codepen.io/isuttell/full/Wbbwyd/)
+* [Using CSS Transitions](http://codepen.io/isuttell/full/dPPKWx/)
+* [Using with GSAP TimelineMax](http://codepen.io/isuttell/full/yyyjmX/)
 
 ## Credit
 Forked from [edankwan/PerspectiveTransform.js](https://github.com/edankwan/PerspectiveTransform.js)
