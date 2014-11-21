@@ -311,4 +311,152 @@ describe('Distort', function() {
       expect(distort.toString()).toEqual('matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1) scale(3, 3) perspective(1000px) translateZ(-2000px)');
     });
   });
+
+  describe('translate', function() {
+    it('should have a `translate` method to move both x and y', function(){
+      var distort = new Distort({
+        width: 100,
+        height: 100
+      });
+
+      distort.translate(10, 10);
+      expect(distort.topLeft.x).toEqual(10);
+      expect(distort.topRight.x).toEqual(110);
+      expect(distort.bottomLeft.x).toEqual(10);
+      expect(distort.bottomRight.x).toEqual(110);
+
+      expect(distort.topLeft.y).toEqual(10);
+      expect(distort.topRight.y).toEqual(10);
+      expect(distort.bottomLeft.y).toEqual(110);
+      expect(distort.bottomRight.y).toEqual(110);
+    });
+
+    it('should have a `translateX` method to move just the x axis', function(){
+      var distort = new Distort({
+        width: 100,
+        height: 100
+      });
+
+      distort.translateX(10);
+      expect(distort.topLeft.x).toEqual(10);
+      expect(distort.topRight.x).toEqual(110);
+      expect(distort.bottomLeft.x).toEqual(10);
+      expect(distort.bottomRight.x).toEqual(110);
+
+      expect(distort.topLeft.y).toEqual(0);
+      expect(distort.topRight.y).toEqual(0);
+      expect(distort.bottomLeft.y).toEqual(100);
+      expect(distort.bottomRight.y).toEqual(100);
+    });
+
+    it('should have a `translateY` method to move just the y axis', function(){
+      var distort = new Distort({
+        width: 100,
+        height: 100
+      });
+
+      distort.translateY(10);
+      expect(distort.topLeft.x).toEqual(0);
+      expect(distort.topRight.x).toEqual(100);
+      expect(distort.bottomLeft.x).toEqual(0);
+      expect(distort.bottomRight.x).toEqual(100);
+
+      expect(distort.topLeft.y).toEqual(10);
+      expect(distort.topRight.y).toEqual(10);
+      expect(distort.bottomLeft.y).toEqual(110);
+      expect(distort.bottomRight.y).toEqual(110);
+    });
+
+    it('should have a `scale` method change the size', function(){
+      var distort = new Distort({
+        width: 100,
+        height: 100
+      });
+
+      distort.scale(1.2);
+      expect(distort.topLeft.x).toBeCloseTo(-10);
+      expect(distort.topRight.x).toBeCloseTo(110);
+      expect(distort.bottomLeft.x).toBeCloseTo(-10);
+      expect(distort.bottomRight.x).toBeCloseTo(110);
+
+      expect(distort.topLeft.y).toBeCloseTo(-10);
+      expect(distort.topRight.y).toBeCloseTo(-10);
+      expect(distort.bottomLeft.y).toBeCloseTo(110);
+      expect(distort.bottomRight.y).toBeCloseTo(110);
+    });
+  });
+
+  describe('perspective', function() {
+    it('should fake perspective to the left', function(){
+      var distort = new Distort({
+        width: 100,
+        height: 100
+      });
+
+      distort.perspective('top', 10);
+      expect(distort.topLeft.x).toEqual(-10);
+      expect(distort.topRight.x).toEqual(110);
+      expect(distort.bottomLeft.x).toEqual(0);
+      expect(distort.bottomRight.x).toEqual(100);
+
+      expect(distort.topLeft.y).toEqual(0);
+      expect(distort.topRight.y).toEqual(0);
+      expect(distort.bottomLeft.y).toEqual(100);
+      expect(distort.bottomRight.y).toEqual(100);
+    });
+
+    it('should fake perspective to the top', function(){
+      var distort = new Distort({
+        width: 100,
+        height: 100
+      });
+
+      distort.perspective('left', 10);
+      expect(distort.topLeft.x).toEqual(0);
+      expect(distort.topRight.x).toEqual(100);
+      expect(distort.bottomLeft.x).toEqual(0);
+      expect(distort.bottomRight.x).toEqual(100);
+
+      expect(distort.topLeft.y).toEqual(-10);
+      expect(distort.topRight.y).toEqual(0);
+      expect(distort.bottomLeft.y).toEqual(110);
+      expect(distort.bottomRight.y).toEqual(100);
+    });
+
+    it('should fake perspective to the bottom', function(){
+      var distort = new Distort({
+        width: 100,
+        height: 100
+      });
+
+      distort.perspective('bottom', 10);
+      expect(distort.topLeft.x).toEqual(0);
+      expect(distort.topRight.x).toEqual(100);
+      expect(distort.bottomLeft.x).toEqual(-10);
+      expect(distort.bottomRight.x).toEqual(110);
+
+      expect(distort.topLeft.y).toEqual(0);
+      expect(distort.topRight.y).toEqual(0);
+      expect(distort.bottomLeft.y).toEqual(100);
+      expect(distort.bottomRight.y).toEqual(100);
+    });
+
+    it('should fake perspective to the right', function(){
+      var distort = new Distort({
+        width: 100,
+        height: 100
+      });
+
+      distort.perspective('right', 10);
+      expect(distort.topLeft.x).toEqual(0);
+      expect(distort.topRight.x).toEqual(100);
+      expect(distort.bottomLeft.x).toEqual(0);
+      expect(distort.bottomRight.x).toEqual(100);
+
+      expect(distort.topLeft.y).toEqual(0);
+      expect(distort.topRight.y).toEqual(-10);
+      expect(distort.bottomLeft.y).toEqual(100);
+      expect(distort.bottomRight.y).toEqual(110);
+    });
+  });
 });

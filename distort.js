@@ -462,5 +462,86 @@
     return extend(new Distort(), this);
   };
 
+  /**
+   * Translate a matrix by x and y
+   *
+   * @param     {Number}    x    Amount to change
+   * @param     {Number}    y    Amount to change
+   */
+  Distort.prototype.translate = function(x, y) {
+    this.topLeft.x += x;
+    this.topRight.x += x;
+    this.bottomLeft.x += x;
+    this.bottomRight.x += x;
+
+    this.topLeft.y += y;
+    this.topRight.y += y;
+    this.bottomLeft.y += y;
+    this.bottomRight.y += y;
+  };
+
+  /**
+   * Translate a matrix on the x axis
+   *
+   * @param     {Number}    x    Amount to change
+   */
+  Distort.prototype.translateX = function(x) {
+    this.translate(x, 0);
+  };
+
+  /**
+   * Translate a matrix on the y axis
+   *
+   * @param     {Number}    y    Amount to change
+   */
+  Distort.prototype.translateY = function(y) {
+    this.translate(0, y);
+  };
+
+  /**
+   * Increase the scale of the matrix from the center
+   *
+   * @param     {Number}    factor    Amount to scale
+   */
+  Distort.prototype.scale = function(factor) {
+    // Move it so the center of the matrix is at 0, 0
+    this.translate(-this.width / 2, -this.height / 2);
+
+    this.topLeft.x *= factor;
+    this.topRight.x *= factor;
+    this.bottomLeft.x *= factor;
+    this.bottomRight.x *= factor;
+
+    this.topLeft.y *= factor;
+    this.topRight.y *= factor;
+    this.bottomLeft.y *= factor;
+    this.bottomRight.y *= factor;
+
+    // Move it it back to it's original position
+    this.translate(this.width / 2, this.height / 2);
+  };
+
+  /**
+   * Faux Perspective Transform
+   *
+   * @param     {String}    direction    ['top', 'left', 'bottom', 'right']
+   * @param     {Number}    value        Amount to change
+   */
+  Distort.prototype.perspective = function(direction, value) {
+    if (direction === 'top') {
+      this.topLeft.x -= value;
+      this.topRight.x += value;
+    } else if (direction === 'left') {
+      this.topLeft.y -= value;
+      this.bottomLeft.y += value;
+    } else if (direction === 'bottom') {
+      this.bottomLeft.x -= value;
+      this.bottomRight.x += value;
+    } else if (direction === 'right') {
+      this.topRight.y -= value;
+      this.bottomRight.y += value;
+    }
+  };
+
   return Distort;
 });
