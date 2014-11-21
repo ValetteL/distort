@@ -10,9 +10,12 @@ set/adjust/animate each of the four points of an element;
 
 ## Basic Usage
 ````
+    // Height and Width are need to calcuate matrix
     var distort = new Distort({
-        width: 100,
-        height: 100
+        width: 100, // Required
+        height: 100, // Required
+
+        $el: $('.element') // Or you can specify a jQuery element
     });
 
     // Relative
@@ -23,9 +26,14 @@ set/adjust/animate each of the four points of an element;
     distort.bottomRight.x = 50;
     distort.bottomRight.y = 50;
 
-    $('#image').css({
-        'transform' : distort.toString()
-    });
+    // Optionally check if the matrix was successfully calculated
+    if(distort.isValid) {
+
+        // Using jQuery for convenience
+        $('#image').css({
+            'transform' : distort.toString()
+        });
+    }
 ````
 
 ## Examples
@@ -44,3 +52,6 @@ Developed by Dr Peter Coxhead: http://www.cs.bham.ac.uk/~pxc/
 Available here: http://www.cs.bham.ac.uk/~pxc/js/
 
 I simply removed some irrelevant variables and functions and merge everything into a smaller function. I also added some error checking functions and bug fixing things.
+
+## License
+Distort is open-sourced software licensed under the MIT license
