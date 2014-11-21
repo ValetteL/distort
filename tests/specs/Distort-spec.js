@@ -465,7 +465,7 @@ describe('Distort', function() {
         height: 100
       });
 
-      expect(function(){ distort.forcePerspective('bad', 10); }).toThrow('Invalid Perspective Direction');
+      expect(function(){ distort.forcePerspective('bad', 10); }).toThrow(new Error('Invalid Perspective Direction'));
 
     });
   });
