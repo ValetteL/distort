@@ -51,15 +51,18 @@
                     $el: $image
                 });
 
-                distort1.topRight.x += 100;
-                distort1.topRight.y += 100;
+                distort1.perspective('bottom', 100);
+                // distort1.topRight.x += 100;
+                // distort1.topRight.y += 100;
 
-                distort1.bottomRight.x -= 50;
-                distort1.bottomRight.y -= 50;
+                // distort1.bottomRight.x -= 50;
+                // distort1.bottomRight.y -= 50;
 
-                // distort1.bottomLeft.x -= 10;
-                distort1.bottomLeft.y -= 50;
+                // // distort1.bottomLeft.x -= 10;
+                // distort1.bottomLeft.y -= 50;
 
+                // distort1.scale(0.8);
+                // distort1.translateX(-100);
 
                 var distort2 = new Distort({
                     $el: $image
@@ -76,6 +79,10 @@
 
                 distort2.topLeft.x += 50;
                 distort2.topLeft.y -= 50;
+
+                distort2.scale(1.2);
+
+                distort2.translateX(100);
 
                 $image.css({
                     'transform' : distort1.toString()
