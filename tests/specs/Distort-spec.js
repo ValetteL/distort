@@ -155,6 +155,43 @@ describe('Distort', function() {
     });
   });
 
+  describe('Offset', function() {
+    it('should by default set the offset to center', function() {
+      var distort = new Distort({
+        width: 100,
+        height: 100
+      });
+      expect(distort.offset.x).toBe(-50);
+      expect(distort.offset.y).toBe(-50);
+    });
+
+    it('should accept pixels', function() {
+      var distort = new Distort({
+        width: 100,
+        height: 100,
+        offset: {
+          x: '0px',
+          y: '0px'
+        }
+      });
+      expect(distort.offset.x).toBe(0);
+      expect(distort.offset.y).toBe(0);
+    });
+
+    it('should accept percent', function() {
+      var distort = new Distort({
+        width: 100,
+        height: 100,
+        offset: {
+          x: '75%',
+          y: '75%'
+        }
+      });
+      expect(distort.offset.x).toBe(-75);
+      expect(distort.offset.y).toBe(-75);
+    });
+  });
+
   describe('Distance errors', function() {
     var distort;
     beforeEach(function() {

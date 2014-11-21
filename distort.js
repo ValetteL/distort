@@ -47,8 +47,7 @@
 
     // Setup Transform Origin
     options.offset = options.offset || {};
-    this.offset.x = options.offset.x || this.width * -0.5;
-    this.offset.y = options.offset.y || this.height * -0.5;
+    this.updateOffset(options.offset || {});
 
     // Define Starting Points
     this.topLeft = {
@@ -74,6 +73,47 @@
     // Calculate the matrix
     this.style = this.calculate();
   }
+
+  /**
+   * Calculate the transform origin. Accepts px, % or defaults to cetner
+   *
+   * @param     {Object}    offset    {x: String, y: String}
+   *
+   * @return    {Object}
+   */
+  Distort.prototype.updateOffset = function(offset) {
+    offset.x = offset.x || '';
+    offset.y = offset.y || '';
+
+    // Configure x offset
+    if (offset.x.indexOf('%') > -1) {
+      // Percentage
+      offset.x = -parseFloat(offset.x) * this.width / 100;
+    } else if (offset.x.indexOf('px') > -1) {
+      // Pixels
+      offset.x = -parseFloat(offset.x);
+    } else {
+      // Default
+      offset.x = this.width * -0.5;
+    }
+
+    // Configure y offset
+    if (offset.y.indexOf('%') > -1) {
+      // Percentage
+      offset.y = -parseFloat(offset.y) * this.height / 100;
+    } else if (offset.y.indexOf('px') > -1) {
+      // Pioffset.yels
+      offset.y = -parseFloat(offset.y);
+    } else {
+      // Default
+      offset.y = this.height * -0.5;
+    }
+
+    // Save it
+    this.offset = offset;
+
+    return offset;
+  };
 
   /**
    * By default a matrix is not valid until it has be calculated
@@ -272,27 +312,39 @@
 
     lenX = this.topLeft.x - this.topRight.x;
     lenY = this.topLeft.y - this.topRight.y;
-    if (Math.sqrt(lenX * lenX + lenY * lenY) <= 1) { return true; }
+    if (Math.sqrt(lenX * lenX + lenY * lenY) <= 1) {
+      return true;
+    }
 
     lenX = this.bottomLeft.x - this.bottomRight.x;
     lenY = this.bottomLeft.y - this.bottomRight.y;
-    if (Math.sqrt(lenX * lenX + lenY * lenY) <= 1) { return true; }
+    if (Math.sqrt(lenX * lenX + lenY * lenY) <= 1) {
+      return true;
+    }
 
     lenX = this.topLeft.x - this.bottomLeft.x;
     lenY = this.topLeft.y - this.bottomLeft.y;
-    if (Math.sqrt(lenX * lenX + lenY * lenY) <= 1) { return true; }
+    if (Math.sqrt(lenX * lenX + lenY * lenY) <= 1) {
+      return true;
+    }
 
     lenX = this.topRight.x - this.bottomRight.x;
     lenY = this.topRight.y - this.bottomRight.y;
-    if (Math.sqrt(lenX * lenX + lenY * lenY) <= 1) { return true; }
+    if (Math.sqrt(lenX * lenX + lenY * lenY) <= 1) {
+      return true;
+    }
 
     lenX = this.topLeft.x - this.bottomRight.x;
     lenY = this.topLeft.y - this.bottomRight.y;
-    if (Math.sqrt(lenX * lenX + lenY * lenY) <= 1) { return true; }
+    if (Math.sqrt(lenX * lenX + lenY * lenY) <= 1) {
+      return true;
+    }
 
     lenX = this.topRight.x - this.bottomLeft.x;
     lenY = this.topRight.y - this.bottomLeft.y;
-    if (Math.sqrt(lenX * lenX + lenY * lenY) <= 1) { return true; }
+    if (Math.sqrt(lenX * lenX + lenY * lenY) <= 1) {
+      return true;
+    }
 
     return false;
   };
@@ -321,11 +373,15 @@
 
     det1 = getDeterminant(this.topLeft, this.topRight, this.bottomRight);
     det2 = getDeterminant(this.bottomRight, this.bottomLeft, this.topLeft);
-    if (det1 <= 0 || det2 <= 0) { return true; }
+    if (det1 <= 0 || det2 <= 0) {
+      return true;
+    }
 
     det1 = getDeterminant(this.topRight, this.bottomRight, this.bottomLeft);
     det2 = getDeterminant(this.bottomLeft, this.topLeft, this.topRight);
-    if (det1 <= 0 || det2 <= 0) { return true; }
+    if (det1 <= 0 || det2 <= 0) {
+      return true;
+    }
 
     return false;
   };
@@ -336,8 +392,12 @@
    * @return    {Boolean}
    */
   Distort.prototype.hasErrors = function() {
-    if (this.hasDistancesError()) { return 1; }
-    if (this.hasPolygonError()) { return 2; }
+    if (this.hasDistancesError()) {
+      return 1;
+    }
+    if (this.hasPolygonError()) {
+      return 2;
+    }
     return 0; // Falsy
   };
 

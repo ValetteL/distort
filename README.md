@@ -15,7 +15,15 @@ set/adjust/animate each of the four points of an element;
         width: 100, // Required
         height: 100, // Required
 
-        $el: $('.element') // Or you can specify a jQuery element
+        // Or
+
+        $el: $('.element'), // Or you can specify a jQuery element
+
+        // (Optional) Transform Origin - Defaults to center
+        offset: {
+            x: '0%' || '0px', // Accepts 'px' or '%'
+            y: '0%' || '0px',
+        }
     });
 
     // Relative
