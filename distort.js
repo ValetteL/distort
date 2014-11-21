@@ -26,7 +26,7 @@
    * @constant
    * @type    {String}
    */
-  var RESET_MATRIX = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)';
+  var BASE_MATRIX = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 
   /**
    * Generates a matrix3d string to to  be used with CSS3 based on four coordinates
@@ -49,7 +49,7 @@
 
     // Setup Transform Origin
     options.offset = options.offset || {};
-    this.updateOffset(options.offset || {});
+    this.setOffset(options.offset || {});
 
     // Define Starting Points
     this.topLeft = {
@@ -72,8 +72,8 @@
     // Save the pixel ratio for later
     this.dpr = window.devicePixelRatio || false;
 
-    // Calculate the matrix
-    this.style = this.calculate();
+    // Update the starting matrix
+    this.update();
   }
 
   /**
@@ -81,7 +81,7 @@
    *
    * @type {Array}
    */
-  Distort.prototype.matrix = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+  Distort.prototype.matrix = BASE_MATRIX;
 
   /**
    * Calculate the transform origin. Accepts px, % or defaults to cetner
@@ -90,7 +90,7 @@
    *
    * @return    {Object}
    */
-  Distort.prototype.updateOffset = function(offset) {
+  Distort.prototype.setOffset = function(offset) {
     offset.x = offset.x || '';
     offset.y = offset.y || '';
 
@@ -187,6 +187,9 @@
    * @return    {String}
    */
   Distort.prototype.calculate = function() {
+    // Reset valid check
+    this.isValid = false;
+
     var aM = [
       [0, 0, 1, 0, 0, 0, 0, 0],
       [0, 0, 1, 0, 0, 0, 0, 0],
@@ -275,15 +278,6 @@
       }
     }
 
-    // Check to see if there are any errors and reset the matrix if so
-    if (this.hasErrors()) {
-      this.isValid = false;
-      this.style = RESET_MATRIX;
-      return this.style;
-    }
-
-    this.isValid = true;
-
     // Save the values of the matrix for later
     this.matrix[0] = arr[0].toFixed(9);
     this.matrix[1] = arr[3].toFixed(9);
@@ -305,17 +299,7 @@
     // Strip Trailing Zeros
     this.matrix = stripTrailingZeros.call(this, this.matrix);
 
-    // Construct the string
-    this.style = constructMatrix3d.call(this, this.matrix);
-
-    // A fix for firefox on retina display
-    if (this.dprFix) {
-      this.style += ' scale(' + this.dpr + ', ' + this.dpr + ') ';
-      this.style += 'perspective(1000px) ';
-      this.style += 'translateZ(' + ((1 - this.dpr) * 1000) + 'px)';
-    }
-
-    return this.style;
+    return this.matrix;
   };
 
   /**
@@ -455,7 +439,29 @@
    * @return    {String}
    */
   Distort.prototype.update = function() {
-    return this.calculate();
+    // Calculate the matrix
+    this.calculate();
+
+      // Check to see if there are any errors and reset the matrix if so
+    if (this.hasErrors()) {
+      this.isValid = false;
+      this.style = constructMatrix3d.call(this, BASE_MATRIX);
+      return this.style;
+    }
+
+    this.isValid = true;
+
+    // Construct the string
+    this.style = constructMatrix3d.call(this, this.matrix);
+
+    // A fix for firefox on retina display
+    if (this.dprFix) {
+      this.style += ' scale(' + this.dpr + ', ' + this.dpr + ') ';
+      this.style += 'perspective(1000px) ';
+      this.style += 'translateZ(' + ((1 - this.dpr) * 1000) + 'px)';
+    }
+
+    return this.style;
   };
 
   /**
