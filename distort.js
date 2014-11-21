@@ -23,6 +23,7 @@
   /**
    * Default Matrix with no distortions
    *
+   * @constant
    * @type    {String}
    */
   var RESET_MATRIX = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)';
@@ -74,6 +75,13 @@
     // Calculate the matrix
     this.style = this.calculate();
   }
+
+  /**
+   * Stores all the values of a matrix
+   *
+   * @type {Array}
+   */
+  Distort.prototype.matrix = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 
   /**
    * Calculate the transform origin. Accepts px, % or defaults to cetner
@@ -276,21 +284,29 @@
 
     this.isValid = true;
 
+    // Save the values of the matrix for later
+    this.matrix[0] = arr[0].toFixed(9);
+    this.matrix[1] = arr[3].toFixed(9);
+    this.matrix[2] = 0;
+    this.matrix[3] = arr[6].toFixed(9);
+    this.matrix[4] = arr[1].toFixed(9);
+    this.matrix[5] = arr[4].toFixed(9);
+    this.matrix[6] = 0;
+    this.matrix[7] = arr[7].toFixed(9);
+    this.matrix[8] = 0;
+    this.matrix[9] = 0;
+    this.matrix[10] = 1;
+    this.matrix[11] = 0;
+    this.matrix[12] = arr[2].toFixed(9);
+    this.matrix[13] = arr[5].toFixed(9);
+    this.matrix[14] = 0;
+    this.matrix[15] = 1;
+
+    // Strip Trailing Zeros
+    this.matrix = stripTrailingZeros.call(this, this.matrix);
+
     // Construct the string
-    this.style = 'matrix3d(' + parseFloat(arr[0].toFixed(9)) + ', ';
-    this.style += parseFloat(arr[3].toFixed(9)) + ', ';
-    this.style += '0, ';
-    this.style += parseFloat(arr[6].toFixed(9)) + ', ';
-    this.style += parseFloat(arr[1].toFixed(9)) + ', ';
-    this.style += parseFloat(arr[4].toFixed(9)) + ', ';
-    this.style += '0, ';
-    this.style += parseFloat(arr[7].toFixed(9)) + ', ';
-    this.style += '0, ';
-    this.style += '0, ';
-    this.style += '1, ';
-    this.style += '0, ';
-    this.style += parseFloat(arr[2].toFixed(9)) + ', ';
-    this.style += parseFloat(arr[5].toFixed(9)) + ', 0, 1)';
+    this.style = constructMatrix3d.call(this, this.matrix);
 
     // A fix for firefox on retina display
     if (this.dprFix) {
@@ -301,6 +317,37 @@
 
     return this.style;
   };
+
+  /**
+   * Removes the trailing zeros from each matrix value
+   *
+   * @param  {Array}   matrix   matrix to clean up
+   *
+   * @return {String}
+   */
+  function stripTrailingZeros(matrix) {
+    var index = -1;
+    while (++index < 16) {
+      matrix[index] = parseFloat(matrix[index]);
+    }
+    return matrix;
+  }
+
+  /**
+   * Create CSS style string
+   *
+   * @param    {Array}   matrix   matrix values
+   *
+   * @return   {String}
+   */
+  function constructMatrix3d(matrix) {
+    var style;
+    style = 'matrix3d(';
+    style += matrix.join(', ');
+    style += ')';
+
+    return style;
+  }
 
   /**
    * Check to see if any value cominbations are bad
