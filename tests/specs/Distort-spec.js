@@ -75,6 +75,24 @@ describe('Distort', function() {
     expect(distort.width).toEqual(100);
   });
 
+  it('should be able to clone itself', function(){
+    var distort = new Distort({
+      width: 100,
+      height: 100
+    });
+    distort.topLeft.x = 10;
+
+    var cloned = distort.clone();
+    cloned.topLeft.x = 100;
+
+    expect(distort.topLeft.x).toBe(10);
+    expect(cloned.topLeft.x).toBe(100);
+
+    expect(cloned.width).toEqual(distort.width);
+    expect(cloned.height).toEqual(distort.height);
+    expect(cloned.offset).toEqual(distort.offset);
+  });
+
   it('should have four points with x, y coordinates', function() {
     var distort = new Distort({
       width: 100,

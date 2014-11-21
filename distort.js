@@ -34,6 +34,7 @@
    * @param   {Object}   [options]   config object
    */
   function Distort(options) {
+    options = options || {};
 
     // Set width height of the matrix
     this.width = options.width;
@@ -426,6 +427,26 @@
    */
   Distort.prototype.equals = function(matrix) {
     return this.toString() === matrix.toString();
+  };
+
+  /**
+   * Create a new instance of this instance
+   *
+   * @return    {Distort}
+   */
+  Distort.prototype.clone = function() {
+    var clone = new Distort({
+      width: this.width,
+      height: this.height,
+      $el: this.$el
+    });
+
+    for (var i in this) {
+      if (this.hasOwnProperty[i]) {
+        clone[i] = this[i];
+      }
+    }
+    return clone;
   };
 
   return Distort;
