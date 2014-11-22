@@ -493,6 +493,8 @@
     this.topRight.y += y;
     this.bottomLeft.y += y;
     this.bottomRight.y += y;
+
+    return this;
   };
 
   /**
@@ -502,6 +504,8 @@
    */
   Distort.prototype.translateX = function(x) {
     this.translate(x, 0);
+
+    return this;
   };
 
   /**
@@ -511,6 +515,8 @@
    */
   Distort.prototype.translateY = function(y) {
     this.translate(0, y);
+
+    return this;
   };
 
   /**
@@ -534,6 +540,8 @@
 
     // Move it it back to it's original position
     this.translate(this.width / 2, this.height / 2);
+
+    return this;
   };
 
   /**
@@ -558,6 +566,8 @@
     } else {
       throw new Error('Invalid Perspective Direction');
     }
+
+    return this;
   };
 
   return Distort;
