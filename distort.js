@@ -89,7 +89,7 @@
     };
 
     // Save the pixel ratio for later
-    this.dpr = window.devicePixelRatio || false;
+    this.dpr = window.devicePixelRatio || 1;
 
     // Update the starting matrix
     this.update();
