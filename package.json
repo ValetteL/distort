@@ -10,6 +10,9 @@
   "scripts": {
     "test": "grunt test"
   },
+  "bin" : {
+    "flow" : "./bin/flow"
+  },
   "contributors": [
     "Isaac Suttell <isaac@isaacsuttell.com>"
   ],

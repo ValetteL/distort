@@ -10,7 +10,9 @@ module.exports = function(grunt) {
   'use strict';
 
   // Auto load grunt tasks
-  require('jit-grunt')(grunt);
+  require('jit-grunt')(grunt, {
+    flow: 'grunt-flow-type-check'
+  });
 
   /**
    * Loads Grunt configuration modules from the specified
