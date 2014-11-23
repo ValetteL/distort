@@ -44,6 +44,30 @@
   var BASE_MATRIX = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 
   /**
+   * Store x, y coords
+   *
+   * @param {Number} x
+   * @param {Number} y
+   */
+  function Point(x, y) {
+    this.x = x || 0;
+    this.y = y || 0;
+  }
+
+  /**
+   * Calculate distance to another point from the current
+   *
+   * @param  {Point} point  {x, y}
+   *
+   * @return {Number}
+   */
+  Point.prototype.distanceTo = function(point) {
+    var lenX = this.x - point.x;
+    var lenY = this.y - point.y;
+    return Math.sqrt(lenX * lenX + lenY * lenY);
+  };
+
+  /**
    * Generates a matrix3d string to to  be used with CSS3 based on four coordinates
    *
    * @constructor
@@ -71,22 +95,10 @@
     this.matrix = BASE_MATRIX;
 
     // Define Default Starting Points
-    this.topLeft = {
-      x: 0,
-      y: 0
-    };
-    this.topRight = {
-      x: this.width,
-      y: 0
-    };
-    this.bottomLeft = {
-      x: 0,
-      y: this.height
-    };
-    this.bottomRight = {
-      x: this.width,
-      y: this.height
-    };
+    this.topLeft = new Point(0, 0);
+    this.topRight = new Point(this.width, 0);
+    this.bottomLeft = new Point(0, this.height);
+    this.bottomRight = new Point(this.width, this.height);
 
     // Save the pixel ratio for later
     this.dpr = window.devicePixelRatio || 1;
@@ -294,44 +306,12 @@
    * @return    {Boolean}
    */
   Distort.prototype.hasDistancesError = function() {
-    var lenX;
-    var lenY;
-
-    lenX = this.topLeft.x - this.topRight.x;
-    lenY = this.topLeft.y - this.topRight.y;
-    if (Math.sqrt(lenX * lenX + lenY * lenY) <= 1) {
-      return true;
-    }
-
-    lenX = this.bottomLeft.x - this.bottomRight.x;
-    lenY = this.bottomLeft.y - this.bottomRight.y;
-    if (Math.sqrt(lenX * lenX + lenY * lenY) <= 1) {
-      return true;
-    }
-
-    lenX = this.topLeft.x - this.bottomLeft.x;
-    lenY = this.topLeft.y - this.bottomLeft.y;
-    if (Math.sqrt(lenX * lenX + lenY * lenY) <= 1) {
-      return true;
-    }
-
-    lenX = this.topRight.x - this.bottomRight.x;
-    lenY = this.topRight.y - this.bottomRight.y;
-    if (Math.sqrt(lenX * lenX + lenY * lenY) <= 1) {
-      return true;
-    }
-
-    lenX = this.topLeft.x - this.bottomRight.x;
-    lenY = this.topLeft.y - this.bottomRight.y;
-    if (Math.sqrt(lenX * lenX + lenY * lenY) <= 1) {
-      return true;
-    }
-
-    lenX = this.topRight.x - this.bottomLeft.x;
-    lenY = this.topRight.y - this.bottomLeft.y;
-    if (Math.sqrt(lenX * lenX + lenY * lenY) <= 1) {
-      return true;
-    }
+    if (this.topLeft.distanceTo(this.topRight) <= 1) { return true; }
+    if (this.bottomLeft.distanceTo(this.bottomRight) <= 1) { return true; }
+    if (this.topLeft.distanceTo(this.bottomLeft) <= 1) { return true; }
+    if (this.topRight.distanceTo(this.bottomRight) <= 1) { return true; }
+    if (this.topLeft.distanceTo(this.bottomRight) <= 1) { return true; }
+    if (this.topRight.distanceTo(this.bottomLeft) <= 1) { return true; }
 
     return false;
   };
