@@ -7,7 +7,7 @@ module.exports = function(config) {
 
     files: [
       'tests/vendor/**/*.js',
-      'distort.js',
+      'distort.jsx.js',
       'tests/specs/**/*.js',
     ],
 

@@ -21,7 +21,7 @@ module.exports = function(grunt) {
         }
       },
       files: {
-        'distort.min.js': ['distort.js']
+        'distort.min.js': ['distort.jsx.js']
       }
     }
   });

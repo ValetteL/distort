@@ -1,22 +1,24 @@
 /**
- * JS Validation
+ * React Tools
  *
  * ---------------------------------------------------------------
  *
+ * Convert JSX to JS
+ *
+ *
  * For usage docs see:
- *      https://github.com/ariya/grunt-jsvalidate
+ *      https://github.com/ericclemmons/grunt-react
  */
 module.exports = function(grunt) {
 
-  grunt.config.set('jsvalidate', {
+  grunt.config.set('react', {
     options: {
-      globals: {},
-      esprimaOptions: {},
-      verbose: false
+      harmony: true,
+      stripTypes: true
     },
     distort: {
       files: {
-        src: ['distort.js']
+        'distort.jsx.js': 'src/distort.jsx'
       }
     }
   });

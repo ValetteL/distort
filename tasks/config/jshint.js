@@ -16,9 +16,9 @@ module.exports = function(grunt) {
     options: {
       jshintrc: true
     },
-    distort: {
+    jsx: {
       files: {
-        src: ['distort.js']
+        src: ['distort.jsx.js']
       }
     }
   });

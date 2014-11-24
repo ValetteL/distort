@@ -9,11 +9,20 @@
  *    https://github.com/isuttell/grunt-flow-type-check
  */
 module.exports = function(grunt) {
+  'use strict';
 
   grunt.config.set('flow', {
+    options: {
+      configFile: '.'
+    },
     distort: {
       options: {
-      	configFile: '.'
+        background: false
+      }
+    },
+    watch: {
+      options: {
+        background: true
       }
     }
   });

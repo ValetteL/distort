@@ -13,7 +13,7 @@ module.exports = function(grunt) {
       configFile: 'tests/karma.conf.js',
       separator: '',
       preprocessors: {
-        'distort.js': 'coverage'
+        'distort.jsx.js': 'coverage'
       },
     },
     single: {

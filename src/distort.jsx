@@ -8,10 +8,10 @@
  Contributor(s): Isaac Suttell <isaac@isaacsuttell.com>
  */
 
-(function(root      = this, factory) {
+(function(root, factory) {
   'use strict';
+  declare var define: any;
   /* istanbul ignore next */
-                          
   if (typeof define === 'function' && typeof define.amd === 'object') {
     define([], function() {
       return factory(root);
@@ -37,31 +37,50 @@
    * Are <length> describing the translation to apply.
    */
 
-  function Point(){}
-              
-              
-  ;
-
-  function Offset(){}
-           
-           
-  ;
-
   /**
    * Default Matrix with no distortions
    *
    * @constant
-   * @type    {Array}
+   * @type    {Array<number>}
    */
-  var BASE_MATRIX                = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+  var BASE_MATRIX: Array<number> = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+
+  /**
+   * Store x, y coords
+   *
+   * @param {Number} x
+   * @param {Number} y
+   */
+  function Point(x: number, y: number) {
+    this.x = x || 0;
+    this.y = y || 0;
+  }
+
+  class Offset {
+    x: any;
+    y: any;
+  }
+
+  /**
+   * Calculate distance to another point from the current
+   *
+   * @param  {Point} point  {x, y}
+   *
+   * @return {Number}
+   */
+  Point.prototype.distanceTo = function(point: Point) {
+    var lenX = this.x - point.x;
+    var lenY = this.y - point.y;
+    return Math.sqrt(lenX * lenX + lenY * lenY);
+  };
 
   /**
    * Generates a matrix3d string to to  be used with CSS3 based on four coordinates
    *
    * @constructor
-   * @param   {Object}   options   (Optional) config object
+   * @param   {Object}   [options]   config object
    */
-  function Distort(options         = {}) {
+  function Distort(options: object = {}) {
     options = options || {};
 
     // Set width height of the matrix
@@ -76,29 +95,16 @@
     }
 
     // Setup Transform Origin
-    options.offset = options.offset || {};
     this.setOffset(options.offset);
 
     // Set starting matrix
     this.matrix = BASE_MATRIX;
 
     // Define Default Starting Points
-    var topLeft        = this.topLeft = {
-      x: 0,
-      y: 0
-    };
-    var topRight        = this.topRight = {
-      x: this.width,
-      y: 0
-    };
-    var bottomLeft        = this.bottomLeft = {
-      x: 0,
-      y: this.height
-    };
-    var bottomRight        = this.bottomRight = {
-      x: this.width,
-      y: this.height
-    };
+    this.topLeft = new Point(0, 0);
+    this.topRight = new Point(this.width, 0);
+    this.bottomLeft = new Point(0, this.height);
+    this.bottomRight = new Point(this.width, this.height);
 
     // Save the pixel ratio for later
     this.dpr = window.devicePixelRatio || 1;
@@ -114,7 +120,7 @@
    *
    * @return    {Object}
    */
-  Distort.prototype.setOffset = function(offset        ) {
+  Distort.prototype.setOffset = function(offset: Offset) {
     offset.x = offset.x ? offset.x.toString() : '';
     offset.y = offset.y ? offset.y.toString() : '';
 
@@ -291,7 +297,7 @@
    *
    * @return   {String}
    */
-  function constructMatrix3d(matrix) {
+  function constructMatrix3d(matrix: Array<number>) {
     var style;
     style = 'matrix3d(';
     style += matrix.join(', ');
@@ -306,44 +312,12 @@
    * @return    {Boolean}
    */
   Distort.prototype.hasDistancesError = function() {
-    var lenX;
-    var lenY;
-
-    lenX = this.topLeft.x - this.topRight.x;
-    lenY = this.topLeft.y - this.topRight.y;
-    if (Math.sqrt(lenX * lenX + lenY * lenY) <= 1) {
-      return true;
-    }
-
-    lenX = this.bottomLeft.x - this.bottomRight.x;
-    lenY = this.bottomLeft.y - this.bottomRight.y;
-    if (Math.sqrt(lenX * lenX + lenY * lenY) <= 1) {
-      return true;
-    }
-
-    lenX = this.topLeft.x - this.bottomLeft.x;
-    lenY = this.topLeft.y - this.bottomLeft.y;
-    if (Math.sqrt(lenX * lenX + lenY * lenY) <= 1) {
-      return true;
-    }
-
-    lenX = this.topRight.x - this.bottomRight.x;
-    lenY = this.topRight.y - this.bottomRight.y;
-    if (Math.sqrt(lenX * lenX + lenY * lenY) <= 1) {
-      return true;
-    }
-
-    lenX = this.topLeft.x - this.bottomRight.x;
-    lenY = this.topLeft.y - this.bottomRight.y;
-    if (Math.sqrt(lenX * lenX + lenY * lenY) <= 1) {
-      return true;
-    }
-
-    lenX = this.topRight.x - this.bottomLeft.x;
-    lenY = this.topRight.y - this.bottomLeft.y;
-    if (Math.sqrt(lenX * lenX + lenY * lenY) <= 1) {
-      return true;
-    }
+    if (this.topLeft.distanceTo(this.topRight) <= 1) { return true; }
+    if (this.bottomLeft.distanceTo(this.bottomRight) <= 1) { return true; }
+    if (this.topLeft.distanceTo(this.bottomLeft) <= 1) { return true; }
+    if (this.topRight.distanceTo(this.bottomRight) <= 1) { return true; }
+    if (this.topLeft.distanceTo(this.bottomRight) <= 1) { return true; }
+    if (this.topRight.distanceTo(this.bottomLeft) <= 1) { return true; }
 
     return false;
   };
@@ -486,7 +460,7 @@
    * @return    {Distort}
    */
   Distort.prototype.clone = function() {
-    return extend(new Distort(), this);
+    return extend(new Distort({}), this);
   };
 
   /**

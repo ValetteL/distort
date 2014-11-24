@@ -6,7 +6,7 @@
   "browser"   : true,
   "jquery"    : true,
   "undef"     : true,
-  "unused"    : true,
+  "unused"    : false,
   "quotmark"  : false,
   "node"      : "true",
   "globals"   : {
