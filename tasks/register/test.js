@@ -11,6 +11,7 @@ module.exports = function(grunt) {
     'react',
     'usebanner',
     'karma:single',
+    'flow:test',
     'hint'
   ]);
 };

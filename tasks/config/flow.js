@@ -15,7 +15,7 @@ module.exports = function(grunt) {
     options: {
       configFile: '.'
     },
-    distort: {
+    test: {
       options: {
         background: false
       }
