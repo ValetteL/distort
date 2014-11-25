@@ -143,15 +143,16 @@
     this.update();
   }
 
-  /**
-   * Calculate the matrix depending upon what the current coordinates are
-   *
-   * @return    {String}
-   */
-  Distort.prototype.calculate = function() {
-    // Reset valid check
-    this.isValid = false;
+  function reduceRowCol(row, col, max) {
+    var sum = 0;
+    var index = -1;
+    while (++index < max) {
+      sum += row[index] * col[index];
+    }
+    return sum;
+  }
 
+  Distort.prototype.setupMatrixes = function() {
     var aM = [
       [0, 0, 1, 0, 0, 0, 0, 0],
       [0, 0, 1, 0, 0, 0, 0, 0],
@@ -163,21 +164,9 @@
       [0, 0, 0, 0, 0, 1, 0, 0]
     ];
     var bM = [0, 0, 0, 0, 0, 0, 0, 0];
-
-    var kmax;
-    var sum;
-    var row;
-    var col = [];
-    var i;
-    var j;
-    var k;
-    var p;
-    var tmp;
-
-    //  MAGIC
     var dst = [this.topLeft, this.topRight, this.bottomLeft, this.bottomRight];
-    var arr = [0, 1, 2, 3, 4, 5, 6, 7];
-    for (i = 0; i < 4; i++) {
+    var i = -1;
+    while (++i < 4) {
       aM[i][0] = aM[i + 4][3] = i & 1 ? this.width + this.offset.x : this.offset.x;
       aM[i][1] = aM[i + 4][4] = (i > 1 ? this.height + this.offset.y : this.offset.y);
       aM[i][6] = (i & 1 ? -this.offset.x - this.width : -this.offset.x) * (dst[i].x + this.offset.x);
@@ -190,26 +179,100 @@
       aM[i][3] = aM[i][4] = aM[i][5] = aM[i + 4][0] = aM[i + 4][1] = aM[i + 4][2] = 0;
     }
 
+    return {
+      aM: aM,
+      bM: bM
+    };
+  };
+
+  function matrixComputation1(arr, bM) {
+    var i = -1;
+    while (++i < 8) {
+      arr[i] = bM[arr[i]];
+    }
+    return arr;
+  }
+
+  function matrixComputation2(arr, aM) {
+    var k = -1;
+    var i;
+    while (++k < 8) {
+      i = k;
+      while (++i < 8) {
+        arr[i] -= arr[k] * aM[i][k];
+      }
+    }
+    return arr;
+  }
+
+  function matrixComputation3(arr, aM) {
+    var k = 8;
+    var i;
+    while (--k > -1) {
+      arr[k] /= aM[k][k];
+      i = -1;
+      while (++i < k) {
+        arr[i] -= arr[k] * aM[i][k];
+      }
+    }
+    return arr;
+  }
+
+  /**
+   * Calculate the matrix depending upon what the current coordinates are
+   *
+   * @return    {String}
+   */
+  Distort.prototype.calculate = function() {
+    // Reset valid check
+    this.isValid = false;
+
+    var sum;
+    var row = [];
+    var col = [];
+    var i;
+    var j;
+    var k;
+    var p;
+
+    // Start the  MAGIC
+
+    var m = this.setupMatrixes();
+    var aM = m.aM;
+    var bM = m.bM;
+    m = void 0;
+
+    var arr = [0, 1, 2, 3, 4, 5, 6, 7];
+
     for (j = 0; j < 8; j++) {
+      /*
+       * -
+       */
       for (i = 0; i < 8; i++) {
         col[i] = aM[i][j];
       }
+      /*
+       * -
+       */
       for (i = 0; i < 8; i++) {
         row = aM[i];
-        kmax = i < j ? i : j;
-        sum = 0.0;
-        for (k = 0; k < kmax; k++) {
-          sum += row[k] * col[k];
-        }
+        sum = reduceRowCol(row, col,  Math.min(i, j));
         row[j] = col[i] -= sum;
       }
+      /*
+       * -
+       */
       p = j;
       for (i = j + 1; i < 8; i++) {
         if (Math.abs(col[i]) > Math.abs(col[p])) {
           p = i;
         }
       }
+      /*
+       * -
+       */
       if (p !== j) {
+        var tmp;
         for (k = 0; k < 8; k++) {
           tmp = aM[p][k];
           aM[p][k] = aM[j][k];
@@ -219,26 +282,27 @@
         arr[p] = arr[j];
         arr[j] = tmp;
       }
+      /*
+       * -
+       */
       if (aM[j][j] !== 0) {
         for (i = j + 1; i < 8; i++) {
           aM[i][j] /= aM[j][j];
         }
       }
     }
-    for (i = 0; i < 8; i++) {
-      arr[i] = bM[arr[i]];
-    }
-    for (k = 0; k < 8; k++) {
-      for (i = k + 1; i < 8; i++) {
-        arr[i] -= arr[k] * aM[i][k];
-      }
-    }
-    for (k = 7; k > -1; k--) {
-      arr[k] /= aM[k][k];
-      for (i = 0; i < k; i++) {
-        arr[i] -= arr[k] * aM[i][k];
-      }
-    }
+    /*
+     * -
+     */
+    arr = matrixComputation1(arr, bM);
+    /*
+     * -
+     */
+    arr = matrixComputation2(arr, aM);
+    /*
+     * -
+     */
+    arr = matrixComputation3(arr, aM);
 
     // Save the values of the matrix for later
     this.matrix[0] = arr[0].toFixed(9);
