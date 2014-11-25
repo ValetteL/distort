@@ -10,6 +10,7 @@ module.exports = function(grunt) {
   grunt.registerTask('test', [
     'react',
     'usebanner',
-    'karma:single'
+    'karma:single',
+    'hint'
   ]);
 };

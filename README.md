@@ -51,6 +51,10 @@ set/adjust/animate each of the four points of an element;
 * [Using CSS Transitions](http://codepen.io/isuttell/full/dPPKWx/)
 * [Using with GSAP TimelineMax](http://codepen.io/isuttell/full/yyyjmX/)
 
+## Development
+
+This branch uses [Flow](http://flowtype.org/) static type checking. The source file can be found in the `src/` directory. The default `grunt` command watches for changes in this file and automatically runs flow, converts the jsx file to js, and runs the project unit tests. Do not edit `distort.jsx.js` as grunt will automatically overrite when the jsx files changes.
+
 ## Credit
 Forked from [edankwan/PerspectiveTransform.js](https://github.com/edankwan/PerspectiveTransform.js)
 

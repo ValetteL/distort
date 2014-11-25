@@ -9,7 +9,7 @@
  Contributor(s): Isaac Suttell <isaac@isaacsuttell.com>
  */
 
-(function(root, factory) {
+(function(root     , factory) {
   'use strict';
                           
   /* istanbul ignore next */
@@ -44,7 +44,7 @@
    * @constant
    * @type    {Array<number>}
    */
-  var BASE_MATRIX                = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+  var BASE_MATRIX             = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 
   /**
    * Store x, y coords
@@ -57,10 +57,49 @@
     this.y = y || 0;
   }
 
-  function Offset(){}
-           
-           
-  
+  /**
+   * Calculate the transform origin. Accepts px, % or defaults to cetner
+   *
+   * @param     {Object}    offset    {x: String, y: String}
+   * @param     {Number}    width     width of element
+   * @param     {Number}    height    height of element
+   *
+   * @return    {Point}
+   */
+  function Offset(offset, width        , height        )     {
+    offset = offset || {};
+    offset.x = offset.x ? offset.x.toString() : '';
+    offset.y = offset.y ? offset.y.toString() : '';
+
+    var x = 0;
+    var y = 0;
+
+    // Configure x offset
+    if (offset.x.indexOf('%') > -1) {
+      // Percentage
+      x = -parseFloat(offset.x) * width / 100;
+    } else if (offset.x.indexOf('px') > -1) {
+      // Pixels
+      x = -parseFloat(offset.x);
+    } else {
+      // grunt Default
+      x = width * -0.5;
+    }
+
+    // Configure y offset
+    if (offset.y.indexOf('%') > -1) {
+      // Percentage
+      y = -parseFloat(offset.y) * height / 100;
+    } else if (offset.y.indexOf('px') > -1) {
+      // Pioffset.yels
+      y = -parseFloat(offset.y);
+    } else {
+      // Default
+      y = height * -0.5;
+    }
+
+    return new Point(x, y);
+  }
 
   /**
    * Calculate distance to another point from the current
@@ -81,7 +120,7 @@
    * @constructor
    * @param   {Object}   [options]   config object
    */
-  function Distort(options         = {}) {
+  function Distort(options) {
     options = options || {};
 
     // Set width height of the matrix
@@ -96,8 +135,7 @@
     }
 
     // Setup Transform Origin
-    options.offset = options.offset || {};
-    this.setOffset(options.offset);
+    this.offset = new Offset(options.offset, this.width, this.height);
 
     // Set starting matrix
     this.matrix = BASE_MATRIX;
@@ -114,49 +152,6 @@
     // Update the starting matrix
     this.update();
   }
-
-  /**
-   * Calculate the transform origin. Accepts px, % or defaults to cetner
-   *
-   * @param     {Object}    offset    {x: String, y: String}
-   *
-   * @return    {Object}
-   */
-  Distort.prototype.setOffset = function(offset        ) {
-                            
-    offset = offset || {x: '', y: ''};
-    offset.x = offset.x ? offset.x.toString() : '';
-    offset.y = offset.y ? offset.y.toString() : '';
-
-    // Configure x offset
-    if (offset.x.indexOf('%') > -1) {
-      // Percentage
-      offset.x = -parseFloat(offset.x) * this.width / 100;
-    } else if (offset.x.indexOf('px') > -1) {
-      // Pixels
-      offset.x = -parseFloat(offset.x);
-    } else {
-      // Default
-      offset.x = this.width * -0.5;
-    }
-
-    // Configure y offset
-    if (offset.y.indexOf('%') > -1) {
-      // Percentage
-      offset.y = -parseFloat(offset.y) * this.height / 100;
-    } else if (offset.y.indexOf('px') > -1) {
-      // Pioffset.yels
-      offset.y = -parseFloat(offset.y);
-    } else {
-      // Default
-      offset.y = this.height * -0.5;
-    }
-
-    // Save it
-    this.offset = offset;
-
-    return offset;
-  };
 
   /**
    * Calculate the matrix depending upon what the current coordinates are
@@ -448,8 +443,11 @@
    * @return    {Object}
    */
   function extend(dest, src) {
+    // Just copy these properties
+    var ignore = ['$el', 'offset'];
+
     for (var i in src) {
-      if (isObject(src[i]) && i !== '$el') {
+      if (isObject(src[i]) && ignore.indexOf(i) === -1) {
         dest[i] = extend({}, src[i]);
       } else {
         dest[i] = src[i];
