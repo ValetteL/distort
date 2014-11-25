@@ -70,35 +70,28 @@
     offset.x = offset.x ? offset.x.toString() : '';
     offset.y = offset.y ? offset.y.toString() : '';
 
-    var x = 0;
-    var y = 0;
-
-    // Configure x offset
-    if (offset.x.indexOf('%') > -1) {
-      // Percentage
-      x = -parseFloat(offset.x) * width / 100;
-    } else if (offset.x.indexOf('px') > -1) {
-      // Pixels
-      x = -parseFloat(offset.x);
-    } else {
-      // grunt Default
-      x = width * -0.5;
-    }
-
-    // Configure y offset
-    if (offset.y.indexOf('%') > -1) {
-      // Percentage
-      y = -parseFloat(offset.y) * height / 100;
-    } else if (offset.y.indexOf('px') > -1) {
-      // Pioffset.yels
-      y = -parseFloat(offset.y);
-    } else {
-      // Default
-      y = height * -0.5;
-    }
+    var x = this.parse(offset.x, width);
+    var y = this.parse(offset.y, height);
 
     return new Point(x, y);
   }
+
+  /**
+   * Parses `px` or `%` inputs for transform-origin
+   *
+   * @param     {String}    value    the input to parse
+   * @param     {Number}    total    Either width or height
+   *
+   * @return    {Number}
+   */
+  Offset.prototype.parse = function(value: string, total: number):number {
+    if (value.indexOf('%') > -1) { // Percentage
+      return -parseFloat(value) * total / 100;
+    } else if (value.indexOf('px') > -1) { // Pixels
+      return -parseFloat(value);
+    }
+    return total * -0.5;
+  };
 
   /**
    * Calculate distance to another point from the current
@@ -107,7 +100,7 @@
    *
    * @return {Number}
    */
-  Point.prototype.distanceTo = function(point: Point) {
+  Point.prototype.distanceTo = function(point: Point):number {
     var lenX = this.x - point.x;
     var lenY = this.y - point.y;
     return Math.sqrt(lenX * lenX + lenY * lenY);
@@ -295,7 +288,7 @@
    *
    * @return   {String}
    */
-  function constructMatrix3d(matrix: Array<number>) {
+  function constructMatrix3d(matrix: Array<number>):string {
     var style;
     style = 'matrix3d(';
     style += matrix.join(', ');
@@ -309,7 +302,7 @@
    *
    * @return    {Boolean}
    */
-  Distort.prototype.hasDistancesError = function() {
+  Distort.prototype.hasDistancesError = function():boolean {
     if (this.topLeft.distanceTo(this.topRight) <= 1) { return true; }
     if (this.bottomLeft.distanceTo(this.bottomRight) <= 1) { return true; }
     if (this.topLeft.distanceTo(this.bottomLeft) <= 1) { return true; }
@@ -329,7 +322,7 @@
    *
    * @return    {Number}
    */
-  function getDeterminant(p0, p1, p2) {
+  function getDeterminant(p0, p1, p2):number {
     return p0.x * p1.y + p1.x * p2.y + p2.x * p0.y - p0.y * p1.x - p1.y * p2.x - p2.y * p0.x;
   }
 
@@ -338,7 +331,7 @@
    *
    * @return    {Boolean}
    */
-  Distort.prototype.hasPolygonError = function() {
+  Distort.prototype.hasPolygonError = function():boolean {
     var det1;
     var det2;
 
@@ -362,7 +355,7 @@
    *
    * @return    {Boolean}
    */
-  Distort.prototype.hasErrors = function() {
+  Distort.prototype.hasErrors = function():number {
     if (this.hasDistancesError()) {
       return 1;
     }
@@ -417,7 +410,7 @@
    *
    * @return    {Boolean}
    */
-  Distort.prototype.equals = function(matrix) {
+  Distort.prototype.equals = function(matrix):boolean {
     return this.toString() === matrix.toString();
   };
 
@@ -428,7 +421,7 @@
    *
    * @return {Boolean}
    */
-  var isObject = function(obj) {
+  var isObject = function(obj):boolean {
     var result = {}.toString.call(obj);
     return result === '[object Object]';
   };
