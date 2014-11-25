@@ -68,6 +68,43 @@
   };
 
   /**
+   * Parses `px` or `%` inputs for transform-origin
+   *
+   * @param     {String}    value    the input to parse
+   * @param     {Number}    total    Either width or height
+   *
+   * @return    {Number}
+   */
+  var parseCSSValue = function(value, total) {
+    if (value.indexOf('%') > -1) { // Percentage
+      return -parseFloat(value) * total / 100;
+    } else if (value.indexOf('px') > -1) { // Pixels
+      return -parseFloat(value);
+    }
+    return total * -0.5;
+  };
+
+ /**
+   * Calculate the transform origin. Accepts px, % or defaults to cetner
+   *
+   * @param     {Object}    offset    {x: String, y: String}
+   * @param     {Number}    width     width of element
+   * @param     {Number}    height    height of element
+   *
+   * @return    {Point}
+   */
+  function Offset(offset, width, height) {
+    offset = offset || {};
+    offset.x = offset.x ? offset.x.toString() : '';
+    offset.y = offset.y ? offset.y.toString() : '';
+
+    var x = parseCSSValue(offset.x, width);
+    var y = parseCSSValue(offset.y, height);
+
+    return new Point(x, y);
+  }
+
+  /**
    * Generates a matrix3d string to to  be used with CSS3 based on four coordinates
    *
    * @constructor
@@ -88,8 +125,7 @@
     }
 
     // Setup Transform Origin
-    options.offset = options.offset || {};
-    this.setOffset(options.offset);
+    this.offset = new Offset(options.offset, this.width, this.height);
 
     // Set starting matrix
     this.matrix = BASE_MATRIX;
@@ -106,47 +142,6 @@
     // Update the starting matrix
     this.update();
   }
-
-  /**
-   * Calculate the transform origin. Accepts px, % or defaults to cetner
-   *
-   * @param     {Object}    offset    {x: String, y: String}
-   *
-   * @return    {Object}
-   */
-  Distort.prototype.setOffset = function(offset) {
-    offset.x = offset.x ? offset.x.toString() : '';
-    offset.y = offset.y ? offset.y.toString() : '';
-
-    // Configure x offset
-    if (offset.x.indexOf('%') > -1) {
-      // Percentage
-      offset.x = -parseFloat(offset.x) * this.width / 100;
-    } else if (offset.x.indexOf('px') > -1) {
-      // Pixels
-      offset.x = -parseFloat(offset.x);
-    } else {
-      // Default
-      offset.x = this.width * -0.5;
-    }
-
-    // Configure y offset
-    if (offset.y.indexOf('%') > -1) {
-      // Percentage
-      offset.y = -parseFloat(offset.y) * this.height / 100;
-    } else if (offset.y.indexOf('px') > -1) {
-      // Pioffset.yels
-      offset.y = -parseFloat(offset.y);
-    } else {
-      // Default
-      offset.y = this.height * -0.5;
-    }
-
-    // Save it
-    this.offset = offset;
-
-    return offset;
-  };
 
   /**
    * Calculate the matrix depending upon what the current coordinates are
@@ -438,8 +433,11 @@
    * @return    {Object}
    */
   function extend(dest, src) {
+    // Just copy these properties
+    var ignore = ['$el', 'offset'];
+
     for (var i in src) {
-      if (isObject(src[i]) && i !== '$el') {
+      if (isObject(src[i]) && ignore.indexOf(i) === -1) {
         dest[i] = extend({}, src[i]);
       } else {
         dest[i] = src[i];
@@ -447,7 +445,6 @@
     }
     return dest;
   }
-
   /**
    * Clones the current instance
    *
