@@ -9,8 +9,14 @@ set/adjust/animate each of the four points of an element;
 [![Dev Dependencies](http://img.shields.io/david/dev/isuttell/distort.svg?style=flat)](https://david-dm.org/isuttell/distort#info=devDependencies)
 [![Release](http://img.shields.io/github/release/isuttell/distort.svg?style=flat)](https://github.com/isuttell/distort/tarball/master)
 
+## Bower
+The easiest way to install and stay up to date with Distort is through [Bower](http://bower.io/):
+```shell
+bower install distort --save
+```
+
 ## Basic Usage
-````
+```js
     // Height and Width are need to calcuate matrix
     var distort = new Distort({
         width: 100, // Required
@@ -43,7 +49,7 @@ set/adjust/animate each of the four points of an element;
             'transform' : distort.toString()
         });
     }
-````
+```
 
 ## Examples
 
@@ -65,3 +71,7 @@ I simply removed some irrelevant variables and functions and merge everything in
 
 ## License
 Distort is open-sourced software licensed under the MIT license
+
+## Release Historty
+* v1.0.1-alpha - Minor bug fixes and refactoring
+* v1.0.0-alpha - Initial Release

@@ -6,10 +6,12 @@
   "authors": [
     "Isaac Suttell <isaac@e-mc2.com>"
   ],
-  "description": "CSS Matrix3D Distorts",
+  "description": "A library to generate CSS3 Matrix3D transforms",
   "keywords": [
     "CSS3",
     "matrix3d",
+    "matrix",
+    "transform",
     "animation"
   ],
   "license": "MIT",
