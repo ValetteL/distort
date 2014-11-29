@@ -28,55 +28,68 @@
         </ul>
       </header>
       <section>
+
+<h2>
+<a id="bower" class="anchor" href="#bower" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+The easiest way to install and stay up to date with Distort is through <a href="http://bower.io/">Bower</a>:
+<p>
+<pre><code>bower install distort --save
+</code></pre>
+</p>
+
 <h2>
 <a id="basic-usage" class="anchor" href="#basic-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Basic Usage</h2>
 
-<pre><code>    var distort = new Distort({
-        width: 100, // Required
-        height: 100, // Required
+<pre><code>&lt;script src="bower_components/distort/distort.min.js">&lt;/script&gt;
 
-        // Or
+&lt;script&gt;
+var distort = new Distort({
+    width: 100, // Required
+    height: 100, // Required
 
-        $el: $('.element'), // Orspecify a jQuery element
+    // Or
 
-        // (Optional) Transform Origin - Defaults to center
-        offset: {
-            x: '50%' || '50px', // Accepts 'px' or '%'
-            y: '50%' || '50px',
-        }
-    });
+    $el: $('.element'), // Or specify a jQuery element
 
-    // Relative
-    distort.topRight.x += 100;
-    distort.topRight.y += 100;
-
-    distort.topLeft.x -= 100;
-    distort.topLeft.y -= 100;
-
-    // Absolute
-    distort.bottomRight.x = 50;
-    distort.bottomRight.y = 50;
-
-    distort.bottomLeft.x = 0;
-    distort.bottomLeft.y = 50;
-
-    // Cloning
-    var translateDistort = distort.clone();
-
-    // Relative Translate
-    translateDistort.translateX(10);
-    translateDistort.translateY(10);
-
-    // Relative Scale
-    var scaleDistort = distort.clone();
-    scaleDistort.scale(1.1);
-
-    // (Optional) Check if the matrix was successfully generated
-    if(distort.isValid) {
-        $('#image').css({
-            'transform' : distort.toString()
-        });
+    // (Optional) Transform Origin - Defaults to center
+    offset: {
+        x: '50%' || '50px', // Accepts 'px' or '%'
+        y: '50%' || '50px',
     }
+});
+
+// Relative
+distort.topRight.x += 100;
+distort.topRight.y += 100;
+
+distort.topLeft.x -= 100;
+distort.topLeft.y -= 100;
+
+// Absolute
+distort.bottomRight.x = 50;
+distort.bottomRight.y = 50;
+
+distort.bottomLeft.x = 0;
+distort.bottomLeft.y = 50;
+
+// Cloning
+var translateDistort = distort.clone();
+
+// Relative Translate
+translateDistort.translateX(10);
+translateDistort.translateY(10);
+
+// Relative Scale
+var scaleDistort = distort.clone();
+scaleDistort.scale(1.1);
+
+// (Optional) Check if the matrix was successfully generated
+if(distort.isValid) {
+    $('#image').css({
+        'transform' : distort.toString()
+    });
+}
+&lt;/script&gt;
 </code></pre>
 
 <h2>
