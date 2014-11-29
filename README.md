@@ -1,7 +1,6 @@
 # Distort.js
 
-Library to generate complex matrixes to be used with CSS3. You can individually
-set/adjust/animate each of the four points of an element;
+Library to generate complex matrixes to be used with CSS3 transforms. You can individually set/adjust/animate each of the four points of an element. Supports AMD.
 
 [![Build Status](http://img.shields.io/travis/isuttell/distort.svg?style=flat)](https://travis-ci.org/isuttell/distort)
 [![Coverage Status](https://img.shields.io/coveralls/isuttell/distort.svg?style=flat)](https://coveralls.io/r/isuttell/distort)
@@ -73,5 +72,6 @@ I simply removed some irrelevant variables and functions and merge everything in
 Distort is open-sourced software licensed under the MIT license
 
 ## Release Historty
-* v1.0.1-alpha - Minor bug fixes and refactoring
+* v1.0.2-alpha - Refactoring
+* v1.0.1-alpha - Minor bug fixes
 * v1.0.0-alpha - Initial Release

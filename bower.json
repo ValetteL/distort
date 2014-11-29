@@ -1,7 +1,7 @@
 {
   "name": "distort",
   "main": "distort.js",
-  "version": "1.0.1-alpha",
+  "version": "1.0.2-alpha",
   "homepage": "http://isuttell.github.io/distort/",
   "authors": [
     "Isaac Suttell <isaac@e-mc2.com>"

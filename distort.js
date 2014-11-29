@@ -143,6 +143,13 @@
     this.update();
   }
 
+  /**
+   * Library version
+   *
+   * @type {String}
+   */
+  Distort.prototype.VERSION = 'v1.0.2-alpha';
+
   function reduceRowCol(row, col, max) {
     var sum = 0;
     var index = -1;
@@ -178,6 +185,8 @@
       aM[i][2] = aM[i + 4][5] = 1;
       aM[i][3] = aM[i][4] = aM[i][5] = aM[i + 4][0] = aM[i + 4][1] = aM[i + 4][2] = 0;
     }
+    dst = void 0;
+    i = void 0;
 
     return {
       aM: aM,
@@ -190,6 +199,7 @@
     while (++i < 8) {
       arr[i] = bM[arr[i]];
     }
+    i = void 0;
     return arr;
   }
 
@@ -202,6 +212,8 @@
         arr[i] -= arr[k] * aM[i][k];
       }
     }
+    i = void 0;
+    k = void 0;
     return arr;
   }
 
@@ -215,6 +227,8 @@
         arr[i] -= arr[k] * aM[i][k];
       }
     }
+    i = void 0;
+    k = void 0;
     return arr;
   }
 
@@ -325,6 +339,18 @@
     // Strip Trailing Zeros
     this.matrix = stripTrailingZeros.call(this, this.matrix);
 
+    // Clean up
+    sum = void 0;
+    row = void 0;
+    col = void 0;
+    i = void 0;
+    j = void 0;
+    k = void 0;
+    p = void 0;
+    arr = void 0;
+    aM = void 0;
+    bM = void 0;
+
     return this.matrix;
   };
 
@@ -385,7 +411,7 @@
    * @return    {Number}
    */
   function getDeterminant(p0, p1, p2) {
-    return p0.x * p1.y + p1.x * p2.y + p2.x * p0.y - p0.y * p1.x - p1.y * p2.x - p2.y * p0.x;
+    return (p0.x * p1.y) + (p1.x * p2.y) + (p2.x * p0.y) - (p0.y * p1.x) - (p1.y * p2.x) - (p2.y * p0.x);
   }
 
   /**
@@ -424,7 +450,7 @@
     if (this.hasPolygonError()) {
       return 2;
     }
-    return 0; // Falsy
+    return 0; // Falsey
   };
 
   /**
