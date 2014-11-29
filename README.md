@@ -6,7 +6,7 @@ Library to generate complex matrixes to be used with CSS3 transforms. You can in
 [![Coverage Status](https://img.shields.io/coveralls/isuttell/distort.svg?style=flat)](https://coveralls.io/r/isuttell/distort)
 [![Codacy Badge](https://www.codacy.com/project/badge/acc9c0ea49c7433fb86216e3aaebce5c)](https://www.codacy.com/public/isuttell/distort)
 [![Dev Dependencies](http://img.shields.io/david/dev/isuttell/distort.svg?style=flat)](https://david-dm.org/isuttell/distort#info=devDependencies)
-[![Release](http://img.shields.io/github/release/isuttell/distort.svg?style=flat)](https://github.com/isuttell/distort/tarball/master)
+[![Release](https://img.shields.io/bower/v/distort.svg?style=flat)](https://github.com/isuttell/distort/tarball/master)
 
 ## Bower
 The easiest way to install and stay up to date with Distort is through [Bower](http://bower.io/):
