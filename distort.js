@@ -68,6 +68,43 @@
   };
 
   /**
+   * Parses `px` or `%` inputs for transform-origin
+   *
+   * @param     {String}    value    the input to parse
+   * @param     {Number}    total    Either width or height
+   *
+   * @return    {Number}
+   */
+  var parseCSSValue = function(value, total) {
+    if (value.indexOf('%') > -1) { // Percentage
+      return -parseFloat(value) * total / 100;
+    } else if (value.indexOf('px') > -1) { // Pixels
+      return -parseFloat(value);
+    }
+    return total * -0.5;
+  };
+
+ /**
+   * Calculate the transform origin. Accepts px, % or defaults to cetner
+   *
+   * @param     {Object}    offset    {x: String, y: String}
+   * @param     {Number}    width     width of element
+   * @param     {Number}    height    height of element
+   *
+   * @return    {Point}
+   */
+  function Offset(offset, width, height) {
+    offset = offset || {};
+    offset.x = offset.x ? offset.x.toString() : '';
+    offset.y = offset.y ? offset.y.toString() : '';
+
+    var x = parseCSSValue(offset.x, width);
+    var y = parseCSSValue(offset.y, height);
+
+    return new Point(x, y);
+  }
+
+  /**
    * Generates a matrix3d string to to  be used with CSS3 based on four coordinates
    *
    * @constructor
@@ -88,8 +125,7 @@
     }
 
     // Setup Transform Origin
-    options.offset = options.offset || {};
-    this.setOffset(options.offset);
+    this.offset = new Offset(options.offset, this.width, this.height);
 
     // Set starting matrix
     this.matrix = BASE_MATRIX;
@@ -107,56 +143,16 @@
     this.update();
   }
 
-  /**
-   * Calculate the transform origin. Accepts px, % or defaults to cetner
-   *
-   * @param     {Object}    offset    {x: String, y: String}
-   *
-   * @return    {Object}
-   */
-  Distort.prototype.setOffset = function(offset) {
-    offset.x = offset.x ? offset.x.toString() : '';
-    offset.y = offset.y ? offset.y.toString() : '';
-
-    // Configure x offset
-    if (offset.x.indexOf('%') > -1) {
-      // Percentage
-      offset.x = -parseFloat(offset.x) * this.width / 100;
-    } else if (offset.x.indexOf('px') > -1) {
-      // Pixels
-      offset.x = -parseFloat(offset.x);
-    } else {
-      // Default
-      offset.x = this.width * -0.5;
+  function reduceRowCol(row, col, max) {
+    var sum = 0;
+    var index = -1;
+    while (++index < max) {
+      sum += row[index] * col[index];
     }
+    return sum;
+  }
 
-    // Configure y offset
-    if (offset.y.indexOf('%') > -1) {
-      // Percentage
-      offset.y = -parseFloat(offset.y) * this.height / 100;
-    } else if (offset.y.indexOf('px') > -1) {
-      // Pioffset.yels
-      offset.y = -parseFloat(offset.y);
-    } else {
-      // Default
-      offset.y = this.height * -0.5;
-    }
-
-    // Save it
-    this.offset = offset;
-
-    return offset;
-  };
-
-  /**
-   * Calculate the matrix depending upon what the current coordinates are
-   *
-   * @return    {String}
-   */
-  Distort.prototype.calculate = function() {
-    // Reset valid check
-    this.isValid = false;
-
+  Distort.prototype.setupMatrixes = function() {
     var aM = [
       [0, 0, 1, 0, 0, 0, 0, 0],
       [0, 0, 1, 0, 0, 0, 0, 0],
@@ -168,21 +164,9 @@
       [0, 0, 0, 0, 0, 1, 0, 0]
     ];
     var bM = [0, 0, 0, 0, 0, 0, 0, 0];
-
-    var kmax;
-    var sum;
-    var row;
-    var col = [];
-    var i;
-    var j;
-    var k;
-    var p;
-    var tmp;
-
-    //  MAGIC
     var dst = [this.topLeft, this.topRight, this.bottomLeft, this.bottomRight];
-    var arr = [0, 1, 2, 3, 4, 5, 6, 7];
-    for (i = 0; i < 4; i++) {
+    var i = -1;
+    while (++i < 4) {
       aM[i][0] = aM[i + 4][3] = i & 1 ? this.width + this.offset.x : this.offset.x;
       aM[i][1] = aM[i + 4][4] = (i > 1 ? this.height + this.offset.y : this.offset.y);
       aM[i][6] = (i & 1 ? -this.offset.x - this.width : -this.offset.x) * (dst[i].x + this.offset.x);
@@ -195,26 +179,100 @@
       aM[i][3] = aM[i][4] = aM[i][5] = aM[i + 4][0] = aM[i + 4][1] = aM[i + 4][2] = 0;
     }
 
+    return {
+      aM: aM,
+      bM: bM
+    };
+  };
+
+  function matrixComputation1(arr, bM) {
+    var i = -1;
+    while (++i < 8) {
+      arr[i] = bM[arr[i]];
+    }
+    return arr;
+  }
+
+  function matrixComputation2(arr, aM) {
+    var k = -1;
+    var i;
+    while (++k < 8) {
+      i = k;
+      while (++i < 8) {
+        arr[i] -= arr[k] * aM[i][k];
+      }
+    }
+    return arr;
+  }
+
+  function matrixComputation3(arr, aM) {
+    var k = 8;
+    var i;
+    while (--k > -1) {
+      arr[k] /= aM[k][k];
+      i = -1;
+      while (++i < k) {
+        arr[i] -= arr[k] * aM[i][k];
+      }
+    }
+    return arr;
+  }
+
+  /**
+   * Calculate the matrix depending upon what the current coordinates are
+   *
+   * @return    {String}
+   */
+  Distort.prototype.calculate = function() {
+    // Reset valid check
+    this.isValid = false;
+
+    var sum;
+    var row = [];
+    var col = [];
+    var i;
+    var j;
+    var k;
+    var p;
+
+    // Start the  MAGIC
+
+    var m = this.setupMatrixes();
+    var aM = m.aM;
+    var bM = m.bM;
+    m = void 0;
+
+    var arr = [0, 1, 2, 3, 4, 5, 6, 7];
+
     for (j = 0; j < 8; j++) {
+      /*
+       * -
+       */
       for (i = 0; i < 8; i++) {
         col[i] = aM[i][j];
       }
+      /*
+       * -
+       */
       for (i = 0; i < 8; i++) {
         row = aM[i];
-        kmax = i < j ? i : j;
-        sum = 0.0;
-        for (k = 0; k < kmax; k++) {
-          sum += row[k] * col[k];
-        }
+        sum = reduceRowCol(row, col,  Math.min(i, j));
         row[j] = col[i] -= sum;
       }
+      /*
+       * -
+       */
       p = j;
       for (i = j + 1; i < 8; i++) {
         if (Math.abs(col[i]) > Math.abs(col[p])) {
           p = i;
         }
       }
+      /*
+       * -
+       */
       if (p !== j) {
+        var tmp;
         for (k = 0; k < 8; k++) {
           tmp = aM[p][k];
           aM[p][k] = aM[j][k];
@@ -224,26 +282,27 @@
         arr[p] = arr[j];
         arr[j] = tmp;
       }
+      /*
+       * -
+       */
       if (aM[j][j] !== 0) {
         for (i = j + 1; i < 8; i++) {
           aM[i][j] /= aM[j][j];
         }
       }
     }
-    for (i = 0; i < 8; i++) {
-      arr[i] = bM[arr[i]];
-    }
-    for (k = 0; k < 8; k++) {
-      for (i = k + 1; i < 8; i++) {
-        arr[i] -= arr[k] * aM[i][k];
-      }
-    }
-    for (k = 7; k > -1; k--) {
-      arr[k] /= aM[k][k];
-      for (i = 0; i < k; i++) {
-        arr[i] -= arr[k] * aM[i][k];
-      }
-    }
+    /*
+     * -
+     */
+    arr = matrixComputation1(arr, bM);
+    /*
+     * -
+     */
+    arr = matrixComputation2(arr, aM);
+    /*
+     * -
+     */
+    arr = matrixComputation3(arr, aM);
 
     // Save the values of the matrix for later
     this.matrix[0] = arr[0].toFixed(9);
@@ -438,8 +497,11 @@
    * @return    {Object}
    */
   function extend(dest, src) {
+    // Just copy these properties
+    var ignore = ['$el', 'offset'];
+
     for (var i in src) {
-      if (isObject(src[i]) && i !== '$el') {
+      if (isObject(src[i]) && ignore.indexOf(i) === -1) {
         dest[i] = extend({}, src[i]);
       } else {
         dest[i] = src[i];
@@ -447,7 +509,6 @@
     }
     return dest;
   }
-
   /**
    * Clones the current instance
    *

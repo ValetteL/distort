@@ -9,6 +9,7 @@
   "unused"    : true,
   "quotmark"  : false,
   "node"      : "true",
+  "maxcomplexity": 10,
   "globals"   : {
     "define": false
   }
