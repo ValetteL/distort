@@ -1,3 +1,4 @@
+/* @flow */
 /*
  ______  _____ _______ _______  _____   ______ _______
  |     \   |   |______    |    |     | |_____/    |
@@ -50,8 +51,8 @@
    * @param {Number} y
    */
   function Point(x, y) {
-    this.x = x || 0;
-    this.y = y || 0;
+    this.x = x;
+    this.y = y;
   }
 
   /**
@@ -84,7 +85,7 @@
     return total * -0.5;
   };
 
- /**
+  /**
    * Calculate the transform origin. Accepts px, % or defaults to cetner
    *
    * @param     {Object}    offset    {x: String, y: String}
@@ -270,7 +271,7 @@
        */
       for (i = 0; i < 8; i++) {
         row = aM[i];
-        sum = reduceRowCol(row, col,  Math.min(i, j));
+        sum = reduceRowCol(row, col, Math.min(i, j));
         row[j] = col[i] -= sum;
       }
       /*
@@ -391,12 +392,24 @@
    * @return    {Boolean}
    */
   Distort.prototype.hasDistancesError = function() {
-    if (this.topLeft.distanceTo(this.topRight) <= 1) { return true; }
-    if (this.bottomLeft.distanceTo(this.bottomRight) <= 1) { return true; }
-    if (this.topLeft.distanceTo(this.bottomLeft) <= 1) { return true; }
-    if (this.topRight.distanceTo(this.bottomRight) <= 1) { return true; }
-    if (this.topLeft.distanceTo(this.bottomRight) <= 1) { return true; }
-    if (this.topRight.distanceTo(this.bottomLeft) <= 1) { return true; }
+    if (this.topLeft.distanceTo(this.topRight) <= 1) {
+      return true;
+    }
+    if (this.bottomLeft.distanceTo(this.bottomRight) <= 1) {
+      return true;
+    }
+    if (this.topLeft.distanceTo(this.bottomLeft) <= 1) {
+      return true;
+    }
+    if (this.topRight.distanceTo(this.bottomRight) <= 1) {
+      return true;
+    }
+    if (this.topLeft.distanceTo(this.bottomRight) <= 1) {
+      return true;
+    }
+    if (this.topRight.distanceTo(this.bottomLeft) <= 1) {
+      return true;
+    }
 
     return false;
   };
@@ -462,7 +475,7 @@
     // Calculate the matrix
     this.calculate();
 
-      // Check to see if there are any errors and reset the matrix if so
+    // Check to see if there are any errors and reset the matrix if so
     if (this.hasErrors()) {
       this.isValid = false;
       this.style = constructMatrix3d.call(this, BASE_MATRIX);
@@ -502,7 +515,7 @@
     return this.toString() === matrix.toString();
   };
 
-    /**
+  /**
    * Checks to see if a var is a function or object
    *
    * @param  {Mixed}  obj  var to check
@@ -541,7 +554,7 @@
    * @return    {Distort}
    */
   Distort.prototype.clone = function() {
-    return extend(new Distort(), this);
+    return extend(new Distort({}), this);
   };
 
   /**
